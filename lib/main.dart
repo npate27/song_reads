@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(SongReads());
-  debugPaintSizeEnabled = true;
+  debugPaintSizeEnabled = false;
 }
 
 class SongReads extends StatelessWidget {

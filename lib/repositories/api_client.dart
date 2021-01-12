@@ -7,8 +7,6 @@ abstract class ApiClient{
 
   ApiClient(this.httpClient);
 
-
-
   Future<void> searchSong(String title, String artist);
   Future<void> getSongComments();
 
