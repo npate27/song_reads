@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
+import 'package:song_reads/models/youtube_video_model.dart';
 import 'package:song_reads/repositories/repository.dart';
-import 'package:song_reads/repositories/youtube_api_client.dart';
+import 'package:song_reads/clients/youtube_api_client.dart';
 
 class YouTubeRepository implements Repository {
   @override
@@ -9,7 +10,7 @@ class YouTubeRepository implements Repository {
 
   YouTubeRepository({@required this.apiClient}) : assert(apiClient != null);
 
-  Future<void> searchSong(String title, String artist) async {
+  Future<YoutubeVideo> searchSong(String title, String artist) async {
     return await apiClient.searchSong(title, artist);
   }
 

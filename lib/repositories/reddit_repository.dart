@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:song_reads/repositories/reddit_api_client.dart';
+import 'package:song_reads/models/reddit_thread_model.dart';
+import 'package:song_reads/clients/reddit_api_client.dart';
 import 'package:song_reads/repositories/repository.dart';
 
 class RedditRepository implements Repository {
@@ -9,7 +10,7 @@ class RedditRepository implements Repository {
 
   RedditRepository({@required this.apiClient}) : assert(apiClient != null);
 
-  Future<void> searchSong(String title, String artist) async {
+  Future<RedditThread> searchSong(String title, String artist) async {
     return await apiClient.searchSong(title, artist);
   }
 

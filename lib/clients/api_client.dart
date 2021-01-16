@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 abstract class ApiClient{
@@ -9,5 +8,4 @@ abstract class ApiClient{
 
   Future<void> searchSong(String title, String artist);
   Future<void> getSongComments();
-
 }
