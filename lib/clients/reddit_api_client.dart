@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
-import 'package:song_reads/models/reddit_thread_model.dart';
+import 'package:song_reads/models/models.dart';
 import 'package:song_reads/clients/api_client.dart';
 
 class RedditApiClient implements ApiClient {

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:song_reads/models/youtube_video_model.dart';
 import 'package:song_reads/repositories/repository.dart';
-import 'package:song_reads/clients/youtube_api_client.dart';
+import 'package:song_reads/models/models.dart';
+import 'package:song_reads/clients/clients.dart';
 
 class YouTubeRepository implements Repository {
   @override

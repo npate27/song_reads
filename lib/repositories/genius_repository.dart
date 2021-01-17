@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:song_reads/models/genius_song_model.dart';
-import 'package:song_reads/clients/genius_api_client.dart';
+import 'package:song_reads/models/models.dart';
+import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/repositories/repository.dart';
 
 class GeniusRepository implements Repository {
