@@ -21,11 +21,7 @@ class Router {
       case RouteConstants.redditCommentsRoute:
         return MaterialPageRoute(builder: (_) => RedditComments());
       default:
-        return MaterialPageRoute(
-            builder: (_) => Scaffold(
-              body: Center(
-                  child: Text('No route defined for ${settings.name}')),
-            ));
+        return MaterialPageRoute(builder: (_) => MainPage());
     }
   }
 }
