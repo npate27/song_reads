@@ -1,6 +1,9 @@
-abstract class SourceModel {
+import 'package:song_reads/constants/enums.dart';
+
+abstract class Source {
   final String id;
   final int likes;
+  final CommentSource commentSource;
 
-  SourceModel({this.id, this.likes});
+  Source({this.id, this.likes, this.commentSource});
 }

@@ -1,11 +1,14 @@
+import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/models/source_model.dart';
 
-class YoutubeVideo extends SourceModel {
+class YoutubeVideo extends Source {
   final String id;
   final int likes;
   final String title;
   final String channelTitle;
   final int numComments;
+  final CommentSource commentSource = CommentSource.youtube;
+
 
   YoutubeVideo({this.id, this.likes, this.title, this.channelTitle, this.numComments});
 

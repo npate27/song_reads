@@ -22,7 +22,7 @@ class YouTubeApiClient implements ApiClient {
     //part=snippet gives more info to parse and verify, id just gives
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/search?part=snippet&q=$query&key=$key';
     final uriEncoded = Uri.encodeFull(uri);
-    final http.Response response = await this.httpClient.get(uriEncoded);
+    final http.Response response = await httpClient.get(uriEncoded);
     //TODO: determine how many vids is enough, currently using top one for test
     //TODO: check if hits is empty in api client before passing this over
     //TODO requery  here for likes and num comments
