@@ -3,7 +3,6 @@ library enums;
 import 'package:flutter/foundation.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
-
 enum CommentSource {
   genius,
   youtube,
@@ -17,26 +16,10 @@ extension CommentSourceImage on CommentSource {
     switch (this) {
       case CommentSource.genius:
         return logosPath + "/genius-logo.png";
-        break;
       case CommentSource.youtube:
         return logosPath + "/youtube-logo.png";
-        break;
       case CommentSource.reddit:
         return logosPath + "/reddit-logo.png";
-        break;
-    }
-  }
-}
-
-extension CommentSourceTitle on CommentSource {
-  String get name => describeEnum(this);
-  String get formattedTitle {
-    switch (this) {
-      case CommentSource.genius:
-        return LiteralConstants.atGeniusString;
-        break;
-      default:
-        return '';
     }
   }
 }
