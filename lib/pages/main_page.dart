@@ -43,9 +43,9 @@ class _LoginPageState extends State<MainPage> {
               ),
               NowPlayingCard(),
               SectionHeader(sectionTitle: LiteralConstants.songCommentHeader,),
-              songSourceBlocBuilder(),
+              SingleChildScrollView(child: songSourceBlocBuilder()),
               SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader,),
-              CommentSourceResult(sourceType: CommentSource.genius, sourceData: null),
+              // CommentSourceResult(sourceType: CommentSource.genius, sourceData: null),
             ],
           ),
         ),
@@ -54,12 +54,12 @@ class _LoginPageState extends State<MainPage> {
   }
 }
 
-
+//Generate ListView of song sources for comments
 BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder() {
-  //TODO: sourceData object containing source-specific info (likes, subreddit, etc.)
   return BlocBuilder<SearchSourceBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchEmpty) {
+          //TODO: get the query dynamically via OS-specific APIs, or allow manual search
           BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(title: "Humble", artist: "Kendrick Lamar"));
         }
         if (state is SearchError) {
@@ -74,9 +74,7 @@ BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder() {
               shrinkWrap: true,
               itemCount: results.length,
               itemBuilder: (BuildContext context, int index) {
-                Source source = results[index];
-                CommentSource sourceType = source.commentSource;
-                return CommentSourceResult(sourceType: sourceType, sourceData: null);
+                return CommentSourceResult(sourceData: results[index]);
               }
           );
         }
