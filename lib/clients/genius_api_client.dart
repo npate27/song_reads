@@ -5,7 +5,7 @@ import 'package:song_reads/models/models.dart';
 import 'package:song_reads/clients/api_client.dart';
 import 'package:song_reads/utils/secret_loader.dart';
 
-class GeniusApiClient implements ApiClient{
+class GeniusApiClient extends ApiClient{
   final http.Client httpClient;
   Future<String> apiKey;
 
@@ -13,7 +13,6 @@ class GeniusApiClient implements ApiClient{
     apiKey = SecretLoader(secretPath: 'assets/secrets.json', key: 'genius_api_key').load();
   }
 
-  //TODO: Return meaningful information
   @override
   Future<GeniusSong> searchSong(String title, String artist) async {
     final String key = await apiKey;
@@ -22,11 +21,11 @@ class GeniusApiClient implements ApiClient{
     //TODO: filter my music relevant subreddits only
     final String uri = '${LiteralConstants.baseGeniusApiUrl}/search?q=$query&access_token=$key';
     final uriEncoded = Uri.encodeFull(uri);
-    final http.Response response = await this.httpClient.get(uriEncoded);
+    final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: currently assumes top result is the desired one, needs more validation, like title validation
     //TODO: check if hits is empty in api client before passing this over
     //TODO: check response status
-    final Map<String,dynamic> topSongResult = jsonDecode(response.body)['response']['hits'][0]['result'];
+    final Map<String,dynamic> topSongResult = response['response']['hits'][0]['result'];
     return GeniusSong.fromJson(topSongResult);
   }
 
