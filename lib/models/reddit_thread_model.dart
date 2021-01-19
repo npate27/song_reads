@@ -20,7 +20,7 @@ class RedditThread extends Source {
         title: json['title'],
         subreddit: json['subreddit'],
         author: json['author'],
-        numComments: json['numComments'],
+        numComments: json['num_comments'],
     );
   }
 }
