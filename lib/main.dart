@@ -37,7 +37,6 @@ class SimpleBlocObserver extends BlocObserver {
   }
 }
 
-
 class SongReads extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -50,6 +49,7 @@ class SongReads extends StatelessWidget {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
+          onGenerateInitialRoutes: (initialRoute) => [Router.generateRoute(RouteSettings(name:initialRoute))],
           onGenerateRoute: Router.generateRoute,
           initialRoute: RouterConstants.mainRoute
       ),
