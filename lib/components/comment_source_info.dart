@@ -51,7 +51,7 @@ List<Widget> sourceContentWidgets(dynamic sourceData) {
   }
 
   return [
-    //TODO: Fix overflow on long text
+    //TODO: Make this a Marquee (so it scrolls if too long)
     Text(title, overflow: TextOverflow.fade, softWrap: false,),
     Text(uploadDetails, overflow: TextOverflow.fade, softWrap: false,), //Channel or user that posted it
     Row(
