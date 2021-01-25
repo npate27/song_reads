@@ -3,14 +3,14 @@ import 'package:http/http.dart' as http;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 import 'package:song_reads/clients/api_client.dart';
-import 'package:song_reads/utils/secret_loader.dart';
+import 'package:song_reads/utils/secrets_utils.dart';
 
 class GeniusApiClient extends ApiClient{
   final http.Client httpClient;
   Future<String> apiKey;
 
   GeniusApiClient({this.httpClient,}) {
-    apiKey = SecretLoader(secretPath: 'assets/secrets.json', key: 'genius_api_key').load();
+    apiKey = loadSecret(secretPath: 'assets/secrets.json', key: 'genius_api_key');
   }
 
   @override

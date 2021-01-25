@@ -6,7 +6,7 @@ import 'package:song_reads/clients/api_client.dart';
 
 class RedditApiClient extends ApiClient {
   final http.Client httpClient;
-  Future<String> apiKey;
+  Future<String> apiKey; //TODO: is this needed for this client?
 
   RedditApiClient({this.httpClient,});
 
