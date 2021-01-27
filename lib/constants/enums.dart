@@ -30,6 +30,6 @@ extension CommentSourceImage on CommentSource {
 
 extension CapitalizedSourceString on CommentSource {
   String get capitalizedSource {
-      return capitalize(this.toString());
+      return capitalize(describeEnum(this));
     }
 }
