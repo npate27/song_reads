@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/utils/pref_loader.dart';
 
 
@@ -16,63 +17,65 @@ class _LoginPageState extends State<PreferencesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: SettingsList(
-              sections: [
-                SettingsSection(
-                  title: 'Sources',
-                  subtitle: Text('Determines which sources to include in results'),
-                  tiles: generateSettingsTiles(),
-                ),
-                SettingsSection(
-                  title: 'Results',
-                  tiles: [
-                    SettingsTile(
-                      title: 'Max Results',
-                      subtitle: 'Getting the top 5 results per source ', //TODO: Make dynamic from shared_preferences
-                      leading: Icon(Icons.list),
-                      onPressed: (BuildContext context) async {
-                        //TODO: open dialog to let user select this (1,2,3...max?)
-                        setMaxResultPreference(5);
-                        print("MAX PREF: " + (await getMaxResultPreference()).toString());
-                      },
+          FutureBuilder<List<SettingsTile>>(
+            future: generateSourceSettingsToggles(),
+            initialData: [],
+            builder: (BuildContext context, AsyncSnapshot<List<SettingsTile>> snapshot) {
+              if (snapshot.hasData && snapshot.data != null) {
+                  return Flexible(
+                    child: SettingsList(
+                      sections: [
+                        SettingsSection(
+                          title: 'Results',
+                          tiles: [
+                            SettingsTile(
+                              title: 'Max Results',
+                              subtitle: 'Getting the top 5 results per source ', //TODO: Make dynamic from shared_preferences
+                              leading: Icon(Icons.list),
+                              onPressed: (BuildContext context) async {
+                                //TODO: open dialog to let user select this (1,2,3...max?)
+                                setMaxResultPreference(5);
+                                print("MAX PREF: " + (await getMaxResultPreference()).toString());
+                              },
+                            ),
+                          ],
+                        ),
+                        SettingsSection(
+                          title: 'Sources',
+                          subtitle: Text(
+                              'Determines which sources to include in results'),
+                          tiles: snapshot.data,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            ),
-          )
+                  );
+              }
+              return CircularProgressIndicator();
+            }
+          ),
         ],
       ),
     );
   }
 
-  List<SettingsTile> generateSettingsTiles() {
-    return [
-      //TODO make this dynamic based on enum CommentSource
-      // probably need to pass a function in onToggle to set proper prefs
-      SettingsTile.switchTile(
-        title: 'Youtube',
+  Future<List<SettingsTile>> generateSourceSettingsToggles() async{
+    List<SettingsTile> sourceToggles = [];
+    for (CommentSource source in CommentSource.values) {
+      bool switchValue = await getSourcePreference(source);
+      sourceToggles.add(SettingsTile.switchTile(
+        title: source.capitalizedSource,
         leading: Icon(Icons.web),
-        switchValue: false,
+        switchValue: switchValue,
         onToggle: (bool value) {
+          setSourcePreference(source, value);
+          //TODO: Make a separate widget, this renders the entire pref page, should isolate to own widget
+          // without this, the toggle doesn't immediately update
+          setState(() {});
         },
-      ),
-      SettingsTile.switchTile(
-        title: 'Reddit',
-        leading: Icon(Icons.web),
-        switchValue: false,
-        onToggle: (bool value) {},
-      ),
-      SettingsTile.switchTile(
-        title: 'Genius',
-        leading: Icon(Icons.web),
-        switchValue: false,
-        onToggle: (bool value) {},
-      ),
-    ];
+      ));
+    }
+    return sourceToggles;
   }
 }
 
