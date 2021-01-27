@@ -37,7 +37,10 @@ class _LoginPageState extends State<MainPage> {
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Icon(Icons.settings, size: 30),
+                    child: IconButton(
+                        icon: Icon(Icons.settings, size: 30,),
+                        onPressed: () { Navigator.pushNamed(context, RouterConstants.preferencesRoute); },
+                    ),
                   ),
                 ],
               ),
