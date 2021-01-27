@@ -1,6 +1,7 @@
 library enums;
 
 import 'package:flutter/foundation.dart';
+import 'package:strings/strings.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
 enum CommentSource {
@@ -9,8 +10,11 @@ enum CommentSource {
   reddit,
 }
 
+extension CommentSourceStringValue on CommentSource {
+  String get inString => describeEnum(this);
+}
+
 extension CommentSourceImage on CommentSource {
-  String get name => describeEnum(this);
   String get sourceImagePath {
     const String logosPath = 'assets/images/logos';
     switch (this) {
@@ -22,4 +26,10 @@ extension CommentSourceImage on CommentSource {
         return logosPath + "/reddit-logo.png";
     }
   }
+}
+
+extension CapitalizedSourceString on CommentSource {
+  String get capitalizedSource {
+      return capitalize(this.toString());
+    }
 }

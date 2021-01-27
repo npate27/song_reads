@@ -13,10 +13,10 @@ void setMaxResultPreference(int maxResults) {
 
 Future<bool> getSourcePreference(CommentSource source) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool(source.toString() ?? useSourceDefault);
+  return prefs.getBool(source.inString) ?? useSourceDefault;
 }
 
 Future<int> getMaxResultPreference() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt(maxResultsPreferenceKey ?? maxResultsDefault);
+  return prefs.getInt(maxResultsPreferenceKey) ?? maxResultsDefault;
 }
