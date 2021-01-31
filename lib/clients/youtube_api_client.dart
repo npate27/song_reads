@@ -24,11 +24,7 @@ class YouTubeApiClient extends ApiClient {
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/search?part=snippet&q=$query&key=$key';
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
-    //TODO: determine how many vids is enough, currently using top one for test
     //TODO: check if hits is empty in api client before passing this over
-    //TODO requery  here for likes and num comments
-    //TODO: check response status
-
     final List<dynamic> videoResult = sourceType.resultsFromResponse(response, maxResults);
     final List<Future<YoutubeVideo>> result = videoResult.map((result) async {
       final String videoId = result['id']['videoId'];

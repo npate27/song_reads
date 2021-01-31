@@ -18,9 +18,7 @@ class RedditApiClient extends ApiClient {
     final String uri = '${LiteralConstants.baseRedditApiUrl}/search.json?q=$query&sort=top';
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
-    //TODO: determine how many threads is enough, currently using top one for test
     //TODO: check if hits is empty in api client before passing this over
-    //TODO: check response status
     final List<dynamic> threadResult = sourceType.resultsFromResponse(response, maxResults);
     final List<RedditThread> result = threadResult.map((result) => RedditThread.fromJson(result['data'])).toList();
     return result;
