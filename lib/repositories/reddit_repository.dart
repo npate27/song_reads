@@ -11,8 +11,9 @@ class RedditRepository implements Repository {
 
   RedditRepository({@required this.apiClient}) : assert(apiClient != null);
 
-  Future<RedditThread> searchSong(String title, String artist) async {
-    return await apiClient.searchSong(title, artist);
+  //TODO: max results shouldn't be optional here, only for Genius Repo and Genius API client
+  Future<List<RedditThread>> searchSong(String title, String artist, [int maxResults]) async {
+    return await apiClient.searchSong(title, artist, maxResults);
   }
 
   @override

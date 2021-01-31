@@ -10,7 +10,8 @@ class GeniusRepository implements Repository {
 
   GeniusRepository({@required this.apiClient}) : assert(apiClient != null);
 
-  Future<GeniusSong> searchSong(String title, String artist) async {
+  @override
+  Future<List<GeniusSong>> searchSong(String title, String artist, [int maxResults]) async {
     return await apiClient.searchSong(title, artist);
   }
 

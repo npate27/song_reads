@@ -15,6 +15,7 @@ extension CommentSourceStringValue on CommentSource {
 }
 
 extension CommentSourceImage on CommentSource {
+  // ignore: missing_return
   String get sourceImagePath {
     const String logosPath = 'assets/images/logos';
     switch (this) {
@@ -32,4 +33,18 @@ extension CapitalizedSourceString on CommentSource {
   String get capitalizedSource {
       return capitalize(describeEnum(this));
     }
+}
+
+extension CommentSourceResultsDataPath on CommentSource {
+  // ignore: missing_return
+  List<dynamic> resultsFromResponse(Map<String, dynamic> resultJson, [int maxResults]) {
+    switch (this) {
+      case CommentSource.genius:
+        return resultJson['response']['hits'];
+      case CommentSource.youtube:
+        return resultJson['items'].take(maxResults).toList();
+      case CommentSource.reddit:
+        return resultJson['data']['children'].take(maxResults).toList();
+    }
+  }
 }

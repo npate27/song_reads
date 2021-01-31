@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 import 'package:song_reads/clients/api_client.dart';
@@ -8,13 +9,14 @@ import 'package:song_reads/utils/secrets_utils.dart';
 class YouTubeApiClient extends ApiClient {
   final http.Client httpClient;
   Future<String> apiKey;
+  static const CommentSource sourceType = CommentSource.youtube;
 
   YouTubeApiClient({this.httpClient,}) {
     apiKey = loadSecret(secretPath: 'assets/secrets.json', key: 'youtube_api_key');
   }
 
   @override
-  Future<YoutubeVideo> searchSong(String title, String artist) async{
+  Future<List<YoutubeVideo>> searchSong(String title, String artist, [int maxResults]) async{
     final String key = await apiKey;
     final String query = '$title $artist';
     //TODO: use authorization header for key
@@ -26,11 +28,16 @@ class YouTubeApiClient extends ApiClient {
     //TODO: check if hits is empty in api client before passing this over
     //TODO requery  here for likes and num comments
     //TODO: check response status
-    final Map<String,dynamic> videoResult = response['items'][0];
-    final String videoId = videoResult['id']['videoId'];
-    final Map<String,dynamic> videoStats = await getVideoStats(videoId, key);
-    videoResult.addAll(videoStats);
-    return YoutubeVideo.fromJson(videoResult);
+
+    final List<dynamic> videoResult = sourceType.resultsFromResponse(response, maxResults);
+    final List<Future<YoutubeVideo>> result = videoResult.map((result) async {
+      final String videoId = result['id']['videoId'];
+      final Map<String,dynamic> videoStats = await getVideoStats(videoId, key);
+      result.addAll(videoStats);
+      return YoutubeVideo.fromJson(result);
+    }).toList();
+
+    return Future.wait(result);
   }
 
   Future<Map<String,dynamic>> getVideoStats(String videoId, String key) async{

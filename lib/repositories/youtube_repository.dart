@@ -10,8 +10,9 @@ class YouTubeRepository implements Repository {
 
   YouTubeRepository({@required this.apiClient}) : assert(apiClient != null);
 
-  Future<YoutubeVideo> searchSong(String title, String artist) async {
-    return await apiClient.searchSong(title, artist);
+  //TODO: max results shouldn't be optional here, only for Genius Repo and Genius API client
+  Future<List<YoutubeVideo>> searchSong(String title, String artist, [int maxResults]) async {
+    return await apiClient.searchSong(title, artist, maxResults);
   }
 
   @override

@@ -8,15 +8,19 @@ abstract class ApiClient {
 
   ApiClient({this.httpClient});
 
-  Future<Source> searchSong(String title, String artist);
+  Future<List<Source>> searchSong(String title, String artist);
 
   Future<void> getSongComments();
 
-  dynamic parseResponse(http.Response response) {
+  Map<String,dynamic> parseResponse(http.Response response) {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load response');
     }
+  }
+  Map<String,dynamic> getResults(Map<String, dynamic> json) {
+    //Get preferences
+    //get data from preference
   }
 }
