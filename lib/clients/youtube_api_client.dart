@@ -40,9 +40,8 @@ class YouTubeApiClient extends ApiClient {
   Future<Map<String,dynamic>> getVideoStats(String videoId, String key) async{
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/videos?part=statistics&id=$videoId&key=$key';
     final uriEncoded = Uri.encodeFull(uri);
-    final http.Response response = await this.httpClient.get(uriEncoded);
-    //TODO: check response status
-    return jsonDecode(response.body)['items'][0];
+    final response = parseResponse(await httpClient.get(uriEncoded));
+    return response['items'][0];
   }
 
   @override
