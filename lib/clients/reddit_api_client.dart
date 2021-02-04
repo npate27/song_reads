@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
@@ -10,7 +11,7 @@ class RedditApiClient extends ApiClient {
   Future<String> apiKey; //TODO: is this needed for this client?
   static const CommentSource sourceType = CommentSource.reddit;
 
-  RedditApiClient({this.httpClient,});
+  RedditApiClient({@required this.httpClient,}) : assert(httpClient != null);
 
   @override
   Future<List<RedditThread>> searchSong(String title, String artist, [int maxResults]) async{

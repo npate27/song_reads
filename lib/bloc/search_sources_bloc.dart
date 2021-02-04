@@ -1,6 +1,7 @@
 //https://medium.com/flutter-community/flutter-essential-what-you-need-to-know-567ad25dcd8f
 //https://medium.com/flutter-community/flutter-todos-tutorial-with-flutter-bloc-d9dd833f9df3
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:song_reads/repositories/repositories.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/models/models.dart';
@@ -11,7 +12,8 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
   final RedditRepository redditRepository;
   // final GeniusRepository geniusRepository;
 
-  SearchSourceBloc({this.ytRepository, this.redditRepository}) : super(SearchEmpty());
+  SearchSourceBloc({@required this.ytRepository, @required this.redditRepository}) : assert(ytRepository != null && redditRepository != null), super(SearchEmpty());
+
 
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
@@ -24,7 +26,7 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
         final List<Source> redditThreads = await redditRepository.searchSong(event.title, event.artist, maxResults);
         List<Source> results = [...ytVideos, ...redditThreads];
         yield SearchLoaded(results: results);
-      } catch (_) {
+      } catch (_) { // TODO: More explicit exception
         yield SearchError();
       }
     }

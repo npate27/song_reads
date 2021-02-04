@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
@@ -11,7 +12,7 @@ class YouTubeApiClient extends ApiClient {
   Future<String> apiKey;
   static const CommentSource sourceType = CommentSource.youtube;
 
-  YouTubeApiClient({this.httpClient,}) {
+  YouTubeApiClient({@required this.httpClient,}) : assert(httpClient != null) {
     apiKey = loadSecret(secretPath: 'assets/secrets.json', key: 'youtube_api_key');
   }
 
