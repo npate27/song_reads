@@ -46,7 +46,7 @@ class _LoginPageState extends State<MainPage> {
               ),
               NowPlayingCard(),
               SectionHeader(sectionTitle: LiteralConstants.songCommentHeader,),
-              SingleChildScrollView(child: songSourceBlocBuilder()),
+              Expanded(child: Container(child: songSourceBlocBuilder())),
               SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader,),
               // CommentSourceResult(sourceType: CommentSource.genius, sourceData: null),
             ],
