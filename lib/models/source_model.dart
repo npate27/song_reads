@@ -6,4 +6,7 @@ abstract class Source {
   final CommentSource commentSource;
 
   Source({this.id, this.likes, this.commentSource});
+
+  @override
+  String toString() => '${commentSource.inString} {id: $id}';
 }
