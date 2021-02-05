@@ -27,7 +27,7 @@ List<Widget> sourceContentWidgets(dynamic sourceData) {
   //explicit downcast to get SourceModel descendant-specific member vars
   switch(sourceData.commentSource) {
     case CommentSource.youtube:
-      var source = (sourceData as YoutubeVideo);
+      var source = (sourceData as YouTubeVideo);
       title = source.title;
       uploadDetails = source.channelTitle;
       commentsCount = source.numComments.toString();

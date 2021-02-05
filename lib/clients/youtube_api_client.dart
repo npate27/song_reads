@@ -17,7 +17,7 @@ class YouTubeApiClient extends ApiClient {
   }
 
   @override
-  Future<List<YoutubeVideo>> searchSong(String title, String artist, [int maxResults]) async{
+  Future<List<YouTubeVideo>> searchSong(String title, String artist, [int maxResults]) async{
     final String key = await apiKey;
     final String query = '$title $artist';
     //TODO: use authorization header for key
@@ -27,11 +27,11 @@ class YouTubeApiClient extends ApiClient {
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: check if hits is empty in api client before passing this over
     final List<dynamic> videoResult = sourceType.resultsFromResponse(response, maxResults);
-    final List<Future<YoutubeVideo>> result = videoResult.map((result) async {
+    final List<Future<YouTubeVideo>> result = videoResult.map((result) async {
       final String videoId = result['id']['videoId'];
       final Map<String,dynamic> videoStats = await getVideoStats(videoId, key);
       result.addAll(videoStats);
-      return YoutubeVideo.fromJson(result);
+      return YouTubeVideo.fromJson(result);
     }).toList();
 
     return Future.wait(result);
@@ -41,6 +41,7 @@ class YouTubeApiClient extends ApiClient {
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/videos?part=statistics&id=$videoId&key=$key';
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
+    //TODO: handle no results here. is that necessary?
     return response['items'][0];
   }
 
