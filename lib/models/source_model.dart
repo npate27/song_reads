@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:song_reads/constants/enums.dart';
 
-abstract class Source {
+abstract class Source extends Equatable{
   final String id;
   final int likes;
   final CommentSource commentSource;
@@ -8,5 +9,8 @@ abstract class Source {
   Source({this.id, this.likes, this.commentSource});
 
   @override
-  String toString() => '${commentSource.inString} {id: $id}';
+  String toString() => '${commentSource.inString} {id: $id, likes: $likes}';
+
+  @override
+  List<Object> get props => [id, likes, commentSource];
 }
