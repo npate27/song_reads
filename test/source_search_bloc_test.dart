@@ -33,9 +33,9 @@ void main() {
     });
 
     group('FetchSources', () {
-      final List<YoutubeVideo> mockYoutubeResultList = [
-        YoutubeVideo(id: '0', likes: 1234, title: '[Music Video] Artist - Song', channelTitle: 'ArtistVEVO', numComments: 1234),
-        YoutubeVideo(id: '1', likes: 1234, title: '[Lyric Video] Artist - Song', channelTitle: 'ArtistVEVO', numComments: 1234),
+      final List<YouTubeVideo> mockYoutubeResultList = [
+        YouTubeVideo(id: '0', likes: 1234, title: '[Music Video] Artist - Song', channelTitle: 'ArtistVEVO', numComments: 1234),
+        YouTubeVideo(id: '1', likes: 1234, title: '[Lyric Video] Artist - Song', channelTitle: 'ArtistVEVO', numComments: 1234),
       ];
       final List<RedditThread> mockRedditResultList = [
         RedditThread(id: '0', likes: 1234, title: '[FRESH] Artist - Song', subreddit: '/r/music', author: '/u/testuser', numComments: 1234),
