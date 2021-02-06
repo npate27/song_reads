@@ -25,6 +25,7 @@ void main() {
   group('searchSong', () {
       final YouTubeRepository youTubeRepository = YouTubeRepository(apiClient: MockYouTubeApiClient());
       final RedditRepository redditRepository = RedditRepository(apiClient: MockRedditApiClient());
+
       test('should called searchSong from YouTubeApiClient', () async{
         when(youTubeRepository.searchSong(any, any, any)).thenAnswer((_) => Future.value());
         youTubeRepository.searchSong('title', 'artist', 5);
