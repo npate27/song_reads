@@ -9,7 +9,6 @@ class YouTubeVideo extends Source {
   final int numComments;
   final CommentSource commentSource = CommentSource.youtube;
 
-
   YouTubeVideo({this.id, this.likes, this.title, this.channelTitle, this.numComments});
 
   factory YouTubeVideo.fromJson(Map<String, dynamic> json) {
