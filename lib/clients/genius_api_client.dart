@@ -21,7 +21,6 @@ class GeniusApiClient extends ApiClient{
     final String key = await apiKey;
     final String query = '$title $artist';
     //TODO: use authorization header for key
-    //TODO: filter my music relevant subreddits only
     final String uri = '${LiteralConstants.baseGeniusApiUrl}/search?q=$query&access_token=$key';
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
