@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:song_reads/constants/enums.dart';
 import 'package:http/http.dart' as http;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
-import './resources/mock_api_response_literals.dart' as ApiConstants;
+import '../resources/mock_api_response_literals.dart' as ApiConstants;
 import 'package:flutter_test/flutter_test.dart';
 
 class MockYouTubeApiClient extends Mock implements YouTubeApiClient {
