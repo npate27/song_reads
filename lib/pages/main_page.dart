@@ -14,10 +14,19 @@ class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _LoginPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> {
+  //TODO: maybe make this an enum so can be expanded upon later
+  List<bool> isSectionExpanded = [true, true]; //[Song section, Album section]
+
+  //TODO: manage this with bloc? or too complex? Just dont want to redraw entire widget tree because of this...
+  void collapseHeaderCallBack(int index) {
+    setState(() {
+      isSectionExpanded[index] = !isSectionExpanded[index];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +54,10 @@ class _LoginPageState extends State<MainPage> {
                 ],
               ),
               NowPlayingCard(),
-              SectionHeader(sectionTitle: LiteralConstants.songCommentHeader,),
-              Expanded(child: Container(child: songSourceBlocBuilder())),
-              SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader,),
-              // CommentSourceResult(sourceType: CommentSource.genius, sourceData: null),
+              SectionHeader(sectionTitle: LiteralConstants.songCommentHeader, headerIndex: 0, collapseHeaderCallBack: collapseHeaderCallBack,),
+              Visibility(visible: isSectionExpanded[0], child: Container(child: Expanded(child: songSourceBlocBuilder()))),
+              SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader, headerIndex: 1, collapseHeaderCallBack: collapseHeaderCallBack,),
+              // Visibility(visible: isSectionExpanded[1], child: Container(child: Expanded(child: songSourceBlocBuilder()))),
             ],
           ),
         ),
