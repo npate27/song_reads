@@ -1,5 +1,6 @@
 library enums;
 
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:strings/strings.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
@@ -45,6 +46,20 @@ extension CommentSourceResultsDataPath on CommentSource {
         return resultJson['items'].take(maxResults).toList();
       case CommentSource.reddit:
         return resultJson['data']['children'].take(maxResults).toList();
+    }
+  }
+}
+
+extension CommentSourceIconBaseColor on CommentSource {
+  // ignore: missing_return
+  Color get sourceImageBaseColor {
+    switch (this) {
+      case CommentSource.genius:
+        return Color(int.parse('0xFFF6F068'));
+      case CommentSource.youtube:
+        return Color(int.parse('0xFFFF0000'));
+      case CommentSource.reddit:
+        return Color(int.parse('0xFFFF4500'));
     }
   }
 }

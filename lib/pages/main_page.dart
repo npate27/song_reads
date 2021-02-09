@@ -6,9 +6,7 @@ import 'package:song_reads/components/now_playing_card.dart';
 import 'package:song_reads/components/section_header.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
-import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/models/models.dart';
-
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -82,6 +80,7 @@ BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder() {
         if (state is SearchLoaded) {
           List<Source> results = state.results;
           return ListView.builder(
+              padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: results.length,
