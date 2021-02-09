@@ -1,6 +1,5 @@
-
 import 'package:flutter/foundation.dart';
-import 'package:song_reads/repositories/api_client.dart';
+import 'package:song_reads/clients/api_client.dart';
 
 abstract class Repository {
   final ApiClient apiClient;

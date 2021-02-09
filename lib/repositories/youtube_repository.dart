@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:song_reads/repositories/repository.dart';
-import 'package:song_reads/repositories/youtube_api_client.dart';
+import 'package:song_reads/models/models.dart';
+import 'package:song_reads/clients/clients.dart';
 
 class YouTubeRepository implements Repository {
   @override
@@ -9,8 +10,9 @@ class YouTubeRepository implements Repository {
 
   YouTubeRepository({@required this.apiClient}) : assert(apiClient != null);
 
-  Future<void> searchSong(String title, String artist) async {
-    return await apiClient.searchSong(title, artist);
+  //TODO: max results shouldn't be optional here, only for Genius Repo and Genius API client
+  Future<List<YouTubeVideo>> searchSong(String title, String artist, [int maxResults]) async {
+    return await apiClient.searchSong(title, artist, maxResults);
   }
 
   @override

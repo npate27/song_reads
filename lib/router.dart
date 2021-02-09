@@ -4,6 +4,7 @@ import 'package:song_reads/pages/genius_comments_page.dart';
 import 'package:song_reads/pages/main_page.dart';
 import 'package:song_reads/pages/reddit_comments_page.dart';
 import 'package:song_reads/pages/youtube_comments_page.dart';
+import 'package:song_reads/pages/preferences_page.dart';
 
 /* Reference
 https://medium.com/flutter-community/flutter-navigation-cheatsheet-a-guide-to-named-routing-dc642702b98c
@@ -20,12 +21,10 @@ class Router {
         return MaterialPageRoute(builder: (_) => GeniusComments());
       case RouteConstants.redditCommentsRoute:
         return MaterialPageRoute(builder: (_) => RedditComments());
+      case RouteConstants.preferencesRoute:
+        return MaterialPageRoute(builder: (_) => PreferencesPage());
       default:
-        return MaterialPageRoute(
-            builder: (_) => Scaffold(
-              body: Center(
-                  child: Text('No route defined for ${settings.name}')),
-            ));
+        return MaterialPageRoute(builder: (_) => MainPage());
     }
   }
 }
