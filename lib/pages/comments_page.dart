@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 
-class RedditComments extends StatefulWidget {
-  RedditComments({Key key}) : super(key: key);
+class CommentsPage extends StatefulWidget {
+  CommentsPage({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<RedditComments> {
+class _LoginPageState extends State<CommentsPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class _LoginPageState extends State<RedditComments> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Test',
+                'Test',
             ),
           ],
         ),
