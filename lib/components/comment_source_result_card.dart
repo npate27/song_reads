@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:song_reads/components/comment_source_info.dart';
 import 'package:song_reads/constants/enums.dart';
 
-class CommentSourceResult extends StatelessWidget {
+class CommentSourceResultCardItem extends StatelessWidget {
   final dynamic sourceData;
 
-  CommentSourceResult({this.sourceData});
+  CommentSourceResultCardItem({this.sourceData});
 
   @override
   Widget build(BuildContext context) {

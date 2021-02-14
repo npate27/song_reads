@@ -85,7 +85,7 @@ BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder() {
               shrinkWrap: true,
               itemCount: results.length,
               itemBuilder: (BuildContext context, int index) {
-                return CommentSourceResult(sourceData: results[index]);
+                return CommentSourceResultCardItem(sourceData: results[index]);
               }
           );
         }
