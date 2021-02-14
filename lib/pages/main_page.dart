@@ -77,7 +77,7 @@ BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder() {
             child: Text('Failed to fetch source results'),
           );
         }
-        if (state is SearchLoaded) {
+        if (state is SearchSourceLoaded) {
           List<Source> results = state.results;
           return ListView.builder(
               padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list

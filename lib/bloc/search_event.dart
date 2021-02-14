@@ -2,6 +2,8 @@
 //https://medium.com/flutter-community/flutter-todos-tutorial-with-flutter-bloc-d9dd833f9df3
 
 import 'package:equatable/equatable.dart';
+import 'package:song_reads/components/comment_source_info.dart';
+import 'package:song_reads/constants/enums.dart';
 
 abstract class SearchEvent extends Equatable {
   const SearchEvent();
@@ -14,6 +16,15 @@ class FetchSources extends SearchEvent {
   FetchSources({this.title, this.artist});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [title, artist];
 }
-//TODO: Add FetchComments (split by source?)
+
+class FetchComments extends SearchEvent {
+  final String id;
+  final CommentSource source;
+
+  FetchComments({this.id, this.source});
+
+  @override
+  List<Object> get props => [id, source];
+}

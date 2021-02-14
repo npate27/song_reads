@@ -65,7 +65,7 @@ void main() {
             return searchSourceBloc;
           },
           act: (bloc) => bloc.add(FetchSources(title: 'title', artist: 'artist')),
-          expect: [SearchLoading(), SearchLoaded(results: [...mockYoutubeResultList, ...mockRedditResultList])],
+          expect: [SearchLoading(), SearchSourceLoaded(results: [...mockYoutubeResultList, ...mockRedditResultList])],
       );
 
       blocTest(

@@ -14,10 +14,19 @@ class SearchEmpty extends SearchState {}
 
 class SearchLoading extends SearchState {}
 
-class SearchLoaded extends SearchState {
+class SearchSourceLoaded extends SearchState {
   final List<Source> results;
 
-  const SearchLoaded({this.results});
+  const SearchSourceLoaded({this.results});
+
+  @override
+  List<Object> get props => [results];
+}
+
+class SearchCommentsLoaded extends SearchState {
+  final List<CommentInfo> results;
+
+  const SearchCommentsLoaded({this.results});
 
   @override
   List<Object> get props => [results];

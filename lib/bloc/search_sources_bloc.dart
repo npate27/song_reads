@@ -25,7 +25,16 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
         final List<Source> ytVideos = await ytRepository.searchSong(event.title, event.artist, maxResults);
         final List<Source> redditThreads = await redditRepository.searchSong(event.title, event.artist, maxResults);
         List<Source> results = [...ytVideos, ...redditThreads];
-        yield SearchLoaded(results: results);
+        yield SearchSourceLoaded(results: results);
+      } catch (_) { // TODO: More explicit exception
+        yield SearchError();
+      }
+    }
+    else if (event is FetchComments) {
+      yield SearchLoading();
+      try {
+
+        yield SearchSourceLoaded(results: results);
       } catch (_) { // TODO: More explicit exception
         yield SearchError();
       }
