@@ -47,6 +47,17 @@ class _LoginPageState extends State<PreferencesPage> {
                               'Determines which sources to include in results'),
                           tiles: snapshot.data,
                         ),
+                        SettingsSection(
+                            title: 'Misc',
+                            tiles: [
+                              SettingsTile(
+                                title: 'App Info',
+                                subtitle: 'Version, Licences and Legal',
+                                leading: Icon(Icons.info_outline_rounded),
+                                onPressed: (BuildContext context) {showAboutDialog(context: context);},
+                              )
+                            ]
+                        )
                       ],
                     ),
                   );
@@ -59,7 +70,7 @@ class _LoginPageState extends State<PreferencesPage> {
     );
   }
 
-  Future<List<SettingsTile>> generateSourceSettingsToggles() async{
+  Future<List<SettingsTile>> generateSourceSettingsToggles() async {
     List<SettingsTile> sourceToggles = [];
     for (CommentSource source in CommentSource.values) {
       bool switchValue = await getSourcePreference(source);
