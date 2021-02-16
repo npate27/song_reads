@@ -26,13 +26,13 @@ void main() {
       final YouTubeRepository youTubeRepository = YouTubeRepository(apiClient: MockYouTubeApiClient());
       final RedditRepository redditRepository = RedditRepository(apiClient: MockRedditApiClient());
 
-      test('should called searchSong from YouTubeApiClient', () async{
+      test('should called searchSong from YouTubeApiClient', () async {
         when(youTubeRepository.searchSong(any, any, any)).thenAnswer((_) => Future.value());
         youTubeRepository.searchSong('title', 'artist', 5);
         verify(youTubeRepository.searchSong(any, any, any)).called(1);
       });
 
-      test('should called searchSong from RedditApiClient', () async{
+      test('should called searchSong from RedditApiClient', () async {
         when(redditRepository.searchSong(any, any, any)).thenAnswer((_) => Future.value());
         redditRepository.searchSong('title', 'artist', 5);
         verify(redditRepository.searchSong(any, any, any)).called(1);

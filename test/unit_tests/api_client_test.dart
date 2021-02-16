@@ -53,7 +53,7 @@ main() {
     group('searchSong', () {
 
       test('return List of RedditThread objects if http call successfully', () async {
-        final List<dynamic> mockVideoResult = CommentSource.youtube.resultsFromResponse(jsonDecode(ApiConstants.youtubeApiSearchSongMultiResults), 5);
+        final List<dynamic> mockVideoResult = CommentSource.youtube.resultsFromResponse(jsonDecode(ApiConstants.youtubeApiSearchSongMultiResults), false, 5);
         final List<Future<YouTubeVideo>> mockResult = mockVideoResult.map((mockResult) async {
           final Map<String,dynamic> videoStats = await jsonDecode(ApiConstants.youtubeApiGetVideoStatsResult)['items'][0];
           mockResult.addAll(videoStats);
@@ -93,9 +93,9 @@ main() {
 
     group('searchSong', () {
 
-      test('return List of RedditThread objects if http call successfully', () async{
+      test('return List of RedditThread objects if http call successfully', () async {
 
-        final List<dynamic> mockThreadResult = CommentSource.reddit.resultsFromResponse(jsonDecode(ApiConstants.redditApiSearchSongMultiResults), 5);
+        final List<dynamic> mockThreadResult = CommentSource.reddit.resultsFromResponse(jsonDecode(ApiConstants.redditApiSearchSongMultiResults), false, 5);
         final List<RedditThread> mockRedditThreadList =  mockThreadResult.map((mockResult) => RedditThread.fromJson(mockResult['data'])).toList();
 
         when(mockHttpClient.get(startsWith(LiteralConstants.baseRedditApiUrl)))
