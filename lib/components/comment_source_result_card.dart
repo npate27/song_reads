@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:song_reads/components/comment_source_info.dart';
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
+import 'package:song_reads/models/models.dart';
 
 
 class CommentSourceResultCardItem extends StatelessWidget {
-  final dynamic sourceData;
+  final Source sourceData;
 
   CommentSourceResultCardItem({this.sourceData});
 
@@ -13,7 +14,7 @@ class CommentSourceResultCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     CommentSource commentSource = sourceData.commentSource;
     return InkWell(
-      onTap: () { Navigator.pushNamed(context, RouterConstants.commentsRoute); },
+      onTap: () { Navigator.pushNamed(context, RouterConstants.commentsRoute, arguments: sourceData); },
       child: Container(
         padding: EdgeInsets.fromLTRB(10,10,10,0),
         height: 100,

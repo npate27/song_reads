@@ -26,12 +26,12 @@ class GeniusApiClient extends ApiClient{
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: currently assumes top result is the desired one, needs more validation, like title validation
     //TODO: check if hits is empty in api client before passing this over
-    final Map<String,dynamic> topSongResult = sourceType.resultsFromResponse(response)[0]['result'];
+    final Map<String,dynamic> topSongResult = sourceType.resultsFromResponse(response, false)[0]['result'];
     return [GeniusSong.fromJson(topSongResult)];
   }
 
   @override
-  Future<void> getSongComments() {
+  Future<List<CommentInfo>> getSongComments(String id) {
     // TODO: implement getSongComments
     throw UnimplementedError();
   }

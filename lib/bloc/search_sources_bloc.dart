@@ -2,6 +2,8 @@
 //https://medium.com/flutter-community/flutter-todos-tutorial-with-flutter-bloc-d9dd833f9df3
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:song_reads/constants/enums.dart';
+import 'package:song_reads/models/comment_info.dart';
 import 'package:song_reads/repositories/repositories.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/models/models.dart';
@@ -16,7 +18,7 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
 
 
   @override
-  Stream<SearchState> mapEventToState(SearchEvent event) async* {
+  Stream<SearchState> mapEventToState(SearchEvent event) async*{
     if (event is FetchSources) {
       yield SearchLoading();
       try {
@@ -33,8 +35,19 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
     else if (event is FetchComments) {
       yield SearchLoading();
       try {
-
-        yield SearchSourceLoaded(results: results);
+        List<CommentInfo> results;
+        switch (event.source) {
+          case CommentSource.youtube:
+            results = await ytRepository.getSongComments(event.id);
+            break;
+          case CommentSource.reddit:
+            results = await redditRepository.getSongComments(event.id);
+            break;
+          case CommentSource.genius:
+          // TODO: Handle this case.
+            break;
+        }
+        yield SearchCommentsLoaded(results: results);
       } catch (_) { // TODO: More explicit exception
         yield SearchError();
       }

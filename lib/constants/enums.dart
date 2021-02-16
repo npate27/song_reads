@@ -2,6 +2,7 @@ library enums;
 
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
+import 'package:song_reads/models/models.dart';
 import 'package:strings/strings.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
@@ -36,16 +37,31 @@ extension CapitalizedSourceString on CommentSource {
     }
 }
 
+//explicit downcast to get SourceModel descendant-specific member vars
+extension SourceExplicitDowncast on CommentSource {
+  dynamic typeCastedSource(Source source) {
+    switch (this) {
+      case CommentSource.genius:
+        return source as GeniusSong;
+      case CommentSource.youtube:
+        return source as YouTubeVideo;
+      case CommentSource.reddit:
+        return source as RedditThread;
+    }
+  }
+}
+
 extension CommentSourceResultsDataPath on CommentSource {
   // ignore: missing_return
-  List<dynamic> resultsFromResponse(Map<String, dynamic> resultJson, [int maxResults]) {
+  List<dynamic> resultsFromResponse(Map<String, dynamic> resultJson, bool isForComments, [int maxResults]) {
     switch (this) {
       case CommentSource.genius:
         return resultJson['response']['hits'];
       case CommentSource.youtube:
-        return resultJson['items'].take(maxResults).toList();
+        return isForComments ?  resultJson['items'] : resultJson['items'].take(maxResults).toList();
       case CommentSource.reddit:
-        return resultJson['data']['children'].take(maxResults).toList();
+        //getting second elem since first elem contains thread info. TODO: do this by looking at [data][children][kind] == "t1"
+        return isForComments ? resultJson[1]['data']['children'] : resultJson['data']['children'].take(maxResults).toList();
     }
   }
 }

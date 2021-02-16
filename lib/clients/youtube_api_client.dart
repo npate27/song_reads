@@ -17,7 +17,7 @@ class YouTubeApiClient extends ApiClient {
   }
 
   @override
-  Future<List<YouTubeVideo>> searchSong(String title, String artist, [int maxResults]) async{
+  Future<List<YouTubeVideo>> searchSong(String title, String artist, [int maxResults]) async {
     final String key = await apiKey;
     final String query = '$title $artist';
     //TODO: use authorization header for key
@@ -26,18 +26,17 @@ class YouTubeApiClient extends ApiClient {
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: check if hits is empty in api client before passing this over
-    final List<dynamic> videoResult = sourceType.resultsFromResponse(response, maxResults);
+    final List<dynamic> videoResult = sourceType.resultsFromResponse(response, false, maxResults);
     final List<Future<YouTubeVideo>> result = videoResult.map((result) async {
       final String videoId = result['id']['videoId'];
       final Map<String,dynamic> videoStats = await getVideoStats(videoId, key);
       result.addAll(videoStats);
       return YouTubeVideo.fromJson(result);
     }).toList();
-
     return Future.wait(result);
   }
 
-  Future<Map<String,dynamic>> getVideoStats(String videoId, String key) async{
+  Future<Map<String,dynamic>> getVideoStats(String videoId, String key) async {
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/videos?part=statistics&id=$videoId&key=$key';
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
@@ -46,8 +45,13 @@ class YouTubeApiClient extends ApiClient {
   }
 
   @override
-  Future<void> getSongComments() {
-    // TODO: implement getSongComments
-    throw UnimplementedError();
+  Future<List<CommentInfo>> getSongComments(String id) async {
+    final String key = await apiKey;
+    final String uri = '${LiteralConstants.baseYoutubeApiUrl}/commentThreads?part=snippet&videoId=$id&maxResults=100&order=relevance&key=$key';
+    final uriEncoded = Uri.encodeFull(uri);
+    final response = parseResponse(await httpClient.get(uriEncoded));
+    final List<dynamic> commentResult = sourceType.resultsFromResponse(response, true);
+    final List<CommentInfo> result = commentResult.map((result) => CommentInfo.fromJson(result, sourceType)).toList();
+    return result;
   }
 }

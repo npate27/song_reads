@@ -17,8 +17,8 @@ class GeniusRepository implements Repository {
 
   //TODO: This API is not exposed, may need to set up a proxy API in APIGW that will scrape and return json of comments. Or hack it with headless web scraping...on mobile
   @override
-  Future<void> getSongComments() {
-    // TODO: implement getSongComments
+  Future<List<CommentInfo>> getSongComments(String id) async {
+    return await apiClient.getSongComments(id);
     throw UnimplementedError();
   }
 }

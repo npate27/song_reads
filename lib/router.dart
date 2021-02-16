@@ -4,6 +4,8 @@ import 'package:song_reads/pages/comments_page.dart';
 import 'package:song_reads/pages/main_page.dart';
 import 'package:song_reads/pages/preferences_page.dart';
 
+import 'models/source_model.dart';
+
 /* Reference
 https://medium.com/flutter-community/flutter-navigation-cheatsheet-a-guide-to-named-routing-dc642702b98c
 */
@@ -14,7 +16,10 @@ class Router {
       case RouteConstants.mainRoute:
         return MaterialPageRoute(builder: (_) => MainPage());
       case RouteConstants.commentsRoute:
-        return MaterialPageRoute(builder: (_) => CommentsPage());
+        return MaterialPageRoute(builder: (BuildContext context) {
+          final Source sourceData = settings.arguments;
+          return CommentsPage(sourceData: sourceData);
+        });
       case RouteConstants.preferencesRoute:
         return MaterialPageRoute(builder: (_) => PreferencesPage());
       default:

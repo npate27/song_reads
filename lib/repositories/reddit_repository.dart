@@ -17,8 +17,7 @@ class RedditRepository implements Repository {
   }
 
   @override
-  Future<void> getSongComments() {
-    // TODO: implement getSongComments
-    throw UnimplementedError();
+  Future<List<CommentInfo>> getSongComments(String id) async {
+    return await apiClient.getSongComments(id);
   }
 }

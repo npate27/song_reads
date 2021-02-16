@@ -24,30 +24,24 @@ List<Widget> sourceContentWidgets(dynamic sourceData) {
   String commentsCount;
   String likes;
 
-  //explicit downcast to get SourceModel descendant-specific member vars
-  switch(sourceData.commentSource) {
+  CommentSource commentSource = sourceData.commentSource;
+  var source = commentSource.typeCastedSource(sourceData);
+  switch(commentSource) {
     case CommentSource.youtube:
-      var source = (sourceData as YouTubeVideo);
       title = source.title;
       uploadDetails = source.channelTitle;
       commentsCount = source.numComments.toString();
       likes = source.likes.toString() + '%';
       break;
     case CommentSource.reddit:
-      var source = (sourceData as RedditThread);
       title = source.title;
       uploadDetails = '/r/${source.subreddit} - ${source.author}';
       commentsCount = source.numComments.toString();
       likes = source.likes.toString();
       break;
-      //TODO: Handle this case where not all fields are non-null
-    // case CommentSource.genius:
-    //   var source = (sourceData as GeniusSong);
-    //   title = source.title;
-    //   uploadDetails = source.author;
-    //   comments = source.numComments;
-    //   likes = source.likes.toString();
-    //   break;
+    case CommentSource.genius:
+        //TODO: Handle this case where not all fields are non-null
+      break;
   }
 
   return [

@@ -10,7 +10,7 @@ abstract class ApiClient {
 
   Future<List<Source>> searchSong(String title, String artist);
 
-  Future<void> getSongComments();
+  Future<List<CommentInfo>> getSongComments(String id);
 
   Map<String,dynamic> parseResponse(http.Response response) {
     if (response.statusCode == 200) {
