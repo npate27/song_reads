@@ -18,6 +18,7 @@ class CommentsPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<CommentsPage> {
+  SearchSourceBloc bloc = SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client)));
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +27,23 @@ class _LoginPageState extends State<CommentsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(child: Expanded(child: songSourceCommentsBlocBuilder(widget.sourceData.id, widget.sourceData.commentSource)))
+            Container(child: Expanded(child: songSourceCommentsBlocBuilder(bloc, widget.sourceData.id, widget.sourceData.commentSource)))
           ],
         ),
       ),
     );
   }
+
+  @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
 }
 
 
 //Generate ListView of song sources for comments
-BlocBuilder<SearchSourceBloc, SearchState> songSourceCommentsBlocBuilder(String sourceId, CommentSource source) {
-  SearchSourceBloc bloc = SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client)));
+BlocBuilder<SearchSourceBloc, SearchState> songSourceCommentsBlocBuilder(SearchSourceBloc bloc, String sourceId, CommentSource source) {
   return BlocBuilder<SearchSourceBloc, SearchState>(
       cubit: bloc,
       builder: (context, state) {
