@@ -16,9 +16,10 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  //TODO: make this dynamic based on manual search or detection
+  SongInfo songInfo = SongInfo(title: "10%", artist: "KAYTRANADA, Kali Uchis", album: "BUBBA", artworkImage: "https://i.scdn.co/image/ab67616d0000b2739b6375bad39943011986c247");
   //TODO: maybe make this an enum so can be expanded upon later
   List<bool> isSectionExpanded = [true, true]; //[Song section, Album section]
-
   //TODO: manage this with bloc? or too complex? Just dont want to redraw entire widget tree because of this...
   void collapseHeaderCallBack(int index) {
     setState(() {
@@ -52,9 +53,9 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ],
               ),
-              NowPlayingCard(),
+              NowPlayingCard(songInfo: songInfo),
               SectionHeader(sectionTitle: LiteralConstants.songCommentHeader, headerIndex: 0, collapseHeaderCallBack: collapseHeaderCallBack,),
-              Visibility(visible: isSectionExpanded[0], child: Container(child: Expanded(child: songSourceBlocBuilder()))),
+              Visibility(visible: isSectionExpanded[0], child: Container(child: Expanded(child: songSourceBlocBuilder(songInfo)))),
               SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader, headerIndex: 1, collapseHeaderCallBack: collapseHeaderCallBack,),
               // Visibility(visible: isSectionExpanded[1], child: Container(child: Expanded(child: songSourceBlocBuilder()))),
             ],
@@ -66,12 +67,12 @@ class _MainPageState extends State<MainPage> {
 }
 
 //Generate ListView of song sources for comments
-BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder() {
+BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder(SongInfo songInfo) {
   return BlocBuilder<SearchSourceBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchEmpty) {
           //TODO: get the query dynamically via OS-specific APIs, or allow manual search
-          BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(title: "Humble", artist: "Kendrick Lamar"));
+          BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(title: songInfo.title, artist: songInfo.artist));
         }
         if (state is SearchError) {
           return Center(
