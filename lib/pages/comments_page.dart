@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/clients/http_client_singleton.dart';
+import 'package:song_reads/components/comment_info_view.dart';
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/models/comment_info.dart';
@@ -50,6 +51,7 @@ BlocBuilder<SearchSourceBloc, SearchState> songSourceCommentsBlocBuilder(SearchS
         if (state is SearchEmpty) {
           bloc.add(FetchComments(id: sourceId, source: source));
         }
+        //TODO: reddit entries are hitting this, fix
         if (state is SearchError) {
           return Center(
             child: Text('Failed to fetch comments'),
@@ -63,7 +65,7 @@ BlocBuilder<SearchSourceBloc, SearchState> songSourceCommentsBlocBuilder(SearchS
               shrinkWrap: true,
               itemCount: results.length,
               itemBuilder: (BuildContext context, int index) {
-                return Text(results[index].text);
+                return CommentInfoView(commentInfo: results[index]);
               }
           );
         }
