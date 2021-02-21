@@ -8,10 +8,10 @@ class PreferencesPage extends StatefulWidget {
   PreferencesPage({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _PreferencesPageState createState() => _PreferencesPageState();
 }
 
-class _LoginPageState extends State<PreferencesPage> {
+class _PreferencesPageState extends State<PreferencesPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,8 @@ class _LoginPageState extends State<PreferencesPage> {
         children: [
           FutureBuilder<List<SettingsTile>>(
             future: generateSourceSettingsToggles(),
-            initialData: [],
-            builder: (BuildContext context, AsyncSnapshot<List<SettingsTile>> snapshot) {
-              if (snapshot.hasData && snapshot.data != null) {
+            builder: (BuildContext context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   return Flexible(
                     child: SettingsList(
                       sections: [

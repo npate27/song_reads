@@ -14,10 +14,10 @@ class CommentsPage extends StatefulWidget {
   CommentsPage({Key key, this.sourceData}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _CommentsPageState createState() => _CommentsPageState();
 }
 
-class _LoginPageState extends State<CommentsPage> {
+class _CommentsPageState extends State<CommentsPage> {
   SearchSourceBloc bloc = SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client)));
 
   @override
