@@ -6,6 +6,7 @@ class CommentInfo {
   final int likes;
   final String user;
   final String text;
+  //TODO: add comment date
   final CommentSource commentSource;
 
   CommentInfo({this.id, this.likes, this.user, this.text, this.commentSource});
