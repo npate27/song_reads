@@ -4,6 +4,7 @@ import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/components/comment_source_result_card.dart';
 import 'package:song_reads/components/now_playing_card.dart';
 import 'package:song_reads/components/section_header.dart';
+import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
@@ -31,6 +32,19 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: false,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+              backgroundColor: Colors.white,
+              context: context,
+              builder: (context) => SongSearchSheet()
+            );
+        },
+        child: Icon(Icons.search),
+        backgroundColor: Colors.red,
+      ),
       body: SafeArea(
         child: Center(
           child: Column(
