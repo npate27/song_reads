@@ -5,6 +5,7 @@ import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 import 'package:song_reads/clients/api_client.dart';
+import 'package:song_reads/utils/api_utils.dart';
 
 class RedditApiClient extends ApiClient {
   final http.Client httpClient;

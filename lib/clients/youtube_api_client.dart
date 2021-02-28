@@ -5,6 +5,7 @@ import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 import 'package:song_reads/clients/api_client.dart';
+import 'package:song_reads/utils/api_utils.dart';
 import 'package:song_reads/utils/secrets_utils.dart';
 
 class YouTubeApiClient extends ApiClient {
