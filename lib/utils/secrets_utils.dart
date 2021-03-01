@@ -4,8 +4,14 @@ import 'dart:async' show Future;
 import 'dart:convert' show json;
 import 'package:flutter/services.dart' show rootBundle;
 
-Future<String> loadSecret({String secretPath, String key}) {
-  return rootBundle.loadStructuredData(secretPath, (jsonStr) async {
-        return json.decode(jsonStr)[key];
+//Result is cached after first call. https://api.flutter.dev/flutter/services/CachingAssetBundle/loadStructuredData.html
+Future<Map<String,dynamic>> loadSecretsJson() {
+  return rootBundle.loadStructuredData('assets/secrets.json', (jsonStr) async {
+        return json.decode(jsonStr);
       });
+}
+
+Future<String> loadSecretFromKey(String key) async {
+  Map<String,dynamic> secretJson = await loadSecretsJson();
+  return secretJson[key];
 }

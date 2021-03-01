@@ -14,7 +14,7 @@ class GeniusApiClient extends ApiClient{
   static const CommentSource sourceType = CommentSource.genius;
 
   GeniusApiClient({@required this.httpClient,}) : assert(httpClient != null) {
-    apiKey = loadSecret(secretPath: 'assets/secrets.json', key: 'genius_api_key');
+    apiKey = loadSecretFromKey('genius_api_key');
   }
 
   @override

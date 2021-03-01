@@ -14,7 +14,7 @@ class YouTubeApiClient extends ApiClient {
   static const CommentSource sourceType = CommentSource.youtube;
 
   YouTubeApiClient({@required this.httpClient,}) : assert(httpClient != null) {
-    apiKey = loadSecret(secretPath: 'assets/secrets.json', key: 'youtube_api_key');
+    apiKey = loadSecretFromKey('youtube_api_key');
   }
 
   @override

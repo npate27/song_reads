@@ -12,7 +12,7 @@ Map<String,dynamic> parseResponse(http.Response response) {
 
 // https://developer.spotify.com/documentation/general/guides/authorization-guide/
 Future<String> spotifyBase64EncodedToken() async {
-  String clientId = await loadSecret(secretPath: 'assets/secrets.json', key: 'spotify_client_id');
-  String clientSecret = await loadSecret(secretPath: 'assets/secrets.json', key: 'spotify_client_secret');
+  String clientId = await loadSecretFromKey('spotify_client_id');
+  String clientSecret = await loadSecretFromKey('spotify_client_secret');
   return base64.encode(utf8.encode('$clientId:$clientSecret'));
 }
