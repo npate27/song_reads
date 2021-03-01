@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flappy_search_bar/flappy_search_bar.dart';
-import 'package:flappy_search_bar/scaled_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:song_reads/clients/clients.dart';
+import 'package:song_reads/clients/http_client_singleton.dart';
 import 'package:song_reads/models/song_info.dart';
+import 'package:song_reads/repositories/spotify_repository.dart';
 
 class SongSearchSheet extends StatefulWidget {
   @override
@@ -9,6 +13,7 @@ class SongSearchSheet extends StatefulWidget {
 }
 
 class _SongSearchSheetState extends State<SongSearchSheet> {
+  final SearchBarController<SongInfo> _searchBarController = SearchBarController();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -35,40 +40,47 @@ class _SongSearchSheetState extends State<SongSearchSheet> {
             ],
           ),
         ),
+        Expanded(child: _searchBar(context, _searchBarController))
       ],
     );
   }
 }
 
 
-SearchBar _searchBar(BuildContext context) {
+SearchBar _searchBar(BuildContext context, SearchBarController searchBarController) {
   return SearchBar<SongInfo>(
     searchBarPadding: EdgeInsets.symmetric(horizontal: 10),
     headerPadding: EdgeInsets.symmetric(horizontal: 10),
     listPadding: EdgeInsets.symmetric(horizontal: 10),
-    onSearch: _getALlPosts,
-    searchBarController: _searchBarController,
-    placeHolder: Text("placeholder"),
-    cancellationWidget: Text("Cancel"),
+    onSearch: _getSpotifyResults,
+    searchBarController: searchBarController,
+    placeHolder: Text("No results yet"),
+    cancellationWidget: Icon(Icons.cancel, size: 35,),
     emptyWidget: Text("empty"),
-    indexedScaledTileBuilder: (int index) => ScaledTile.count(1, index.isEven ? 2 : 1),
     onCancelled: () {
       print("Cancelled triggered");
     },
     mainAxisSpacing: 10,
     crossAxisSpacing: 10,
-    crossAxisCount: 2,
+    crossAxisCount: 1,
     onItemFound: (SongInfo searchResult, int index) {
       return Container(
-        child: ListTile(
-          title: Text(searchResult.title),
-          isThreeLine: true,
-          subtitle: Text(searchResult.artist),
-          onTap: () {
-            print("Tapped result");
-          },
-        ),
+          child: ListTile(
+            title: Text(searchResult.title),
+            subtitle: Text(searchResult.artist),
+            leading: Image.network(searchResult.artworkImage, height: 100),
+            onTap: () { print("TEST"); },
+            )
       );
     },
   );
+}
+
+Future<List<SongInfo>> _getSpotifyResults(String text) async {
+  SpotifyRepository repository = SpotifyRepository(apiClient: SpotifyApiClient(httpClient: AppHttpClient().client));
+  // await Future.delayed(Duration(seconds: text.length == 4 ? 10 : 1));
+  // if (text.length == 5) throw Error();
+  // if (text.length == 6) return [];
+  List<SongInfo> searchResults =  await repository.getSongSearchResults(text);
+  return searchResults;
 }
