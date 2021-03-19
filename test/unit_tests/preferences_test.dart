@@ -1,13 +1,11 @@
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/constants/defaults.dart';
 import 'package:song_reads/utils/pref_loader.dart';
 
 main() {
-
+  //TODO adapt for Hive preferences
   setUp(() {
     Map<String,dynamic> values = { LiteralConstants.maxResultsPreferenceKey: maxResultsDefault };
     for (CommentSource source in CommentSource.values) {
