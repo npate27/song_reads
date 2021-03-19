@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/clients/http_client_singleton.dart';
@@ -52,8 +54,9 @@ class SongReads extends StatelessWidget {
     );
   }
 }
-void main() {
+void main() async {
   Bloc.observer = SimpleBlocObserver();
+  await Hive.initFlutter();
   runApp(SongReads());
   debugPaintSizeEnabled = false;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/components/comment_source_result_card.dart';
 import 'package:song_reads/components/now_playing_card.dart';
@@ -26,6 +27,12 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       isSectionExpanded[index] = !isSectionExpanded[index];
     });
+  }
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
   }
 
   @override

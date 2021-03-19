@@ -7,7 +7,7 @@ import 'package:song_reads/models/comment_info.dart';
 import 'package:song_reads/repositories/repositories.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/models/models.dart';
-import 'package:song_reads/utils/pref_loader.dart';
+import 'package:song_reads/utils/preferences.dart';
 
 class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
   final YouTubeRepository ytRepository;
@@ -23,7 +23,8 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
       yield SearchLoading();
       try {
         //TODO: Make these lists of top N results to be merged into one list (random order? allow filtering?)
-        final int maxResults = await getMaxResultPreference();
+        Preferences preferences = await Preferences.instance;
+        final int maxResults = preferences.maxResultsPref();
         final List<Source> ytVideos = await ytRepository.searchSong(event.title, event.artist, maxResults);
         final List<Source> redditThreads = await redditRepository.searchSong(event.title, event.artist, maxResults);
         List<Source> results = [...ytVideos, ...redditThreads];

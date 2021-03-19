@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:song_reads/constants/enums.dart';
-import 'package:song_reads/utils/pref_loader.dart';
-
+import 'package:song_reads/utils/preferences.dart';
 
 class PreferencesPage extends StatefulWidget {
   PreferencesPage({Key key}) : super(key: key);
@@ -34,8 +33,9 @@ class _PreferencesPageState extends State<PreferencesPage> {
                               leading: Icon(Icons.list),
                               onPressed: (BuildContext context) async {
                                 //TODO: open dialog to let user select this (1,2,3...max?)
-                                setMaxResultPreference(5);
-                                print("MAX PREF: " + (await getMaxResultPreference()).toString());
+                                Preferences preferences = await Preferences.instance;
+                                preferences.setMaxResultsPref(5);
+                                print("MAX PREF: " + (preferences.maxResultsPref()).toString());
                               },
                             ),
                           ],
@@ -71,14 +71,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   Future<List<SettingsTile>> generateSourceSettingsToggles() async {
     List<SettingsTile> sourceToggles = [];
+    Preferences preferences = await Preferences.instance;
     for (CommentSource source in CommentSource.values) {
-      bool switchValue = await getSourcePreference(source);
+      bool switchValue = preferences.sourcePref(source);
       sourceToggles.add(SettingsTile.switchTile(
         title: source.capitalizedSource,
         leading: Icon(Icons.web),
         switchValue: switchValue,
         onToggle: (bool value) {
-          setSourcePreference(source, value);
+          preferences.setSourcePref(source, value);
           //TODO: Make a separate widget, this renders the entire pref page, should isolate to own widget
           // without this, the toggle doesn't immediately update
           setState(() {});
