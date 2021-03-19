@@ -19,6 +19,5 @@ class GeniusRepository implements Repository {
   @override
   Future<List<CommentInfo>> getSongComments(String id) async {
     return await apiClient.getSongComments(id);
-    throw UnimplementedError();
   }
 }

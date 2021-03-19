@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:song_reads/constants/enums.dart';
-import 'package:song_reads/models/models.dart';
 
 class CommentSourceInfo extends StatelessWidget {
   final dynamic sourceData;

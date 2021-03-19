@@ -1,5 +1,4 @@
 import 'package:song_reads/constants/enums.dart';
-import 'package:song_reads/models/source_model.dart';
 
 class CommentInfo {
   final String id;

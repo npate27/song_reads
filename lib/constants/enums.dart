@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:song_reads/models/models.dart';
 import 'package:strings/strings.dart';
-import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
 enum CommentSource {
   genius,

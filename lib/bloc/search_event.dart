@@ -2,7 +2,6 @@
 //https://medium.com/flutter-community/flutter-todos-tutorial-with-flutter-bloc-d9dd833f9df3
 
 import 'package:equatable/equatable.dart';
-import 'package:song_reads/components/comment_source_info.dart';
 import 'package:song_reads/constants/enums.dart';
 
 abstract class SearchEvent extends Equatable {

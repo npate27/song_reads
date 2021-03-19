@@ -4,7 +4,6 @@ import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/models/models.dart';
 
-
 class CommentSourceResultCardItem extends StatelessWidget {
   final Source sourceData;
 
