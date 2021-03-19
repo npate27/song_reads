@@ -26,15 +26,16 @@ class SpotifyApiClient {
   Future<List<SongInfo>> getSongSearchResults(String text) async {
     final uriEncoded = Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=$text&type=track&market=US&limit=10&offset=5');
     //TODO: cache this from getAccessToken till expiration (verify if 404 before getting new token?)
-    final authToken = await spotifyBase64EncodedToken();
+    final accessToken = await getAccessToken();
     final response = parseResponse(await httpClient.get(
         uriEncoded,
         headers: {
           'Content-type': 'application/json',
-          'Authorization': 'Bearer $authToken'
+          'Authorization': 'Bearer $accessToken'
         }
     ));
-    final List<SongInfo> searchResults = response['tracks']['items'].map((result) => SongInfo(title: result['name'], artist: result['artists'][0]['name'], album: result['album']['name'], artworkImage: result['album']['images'][0]['url'])).toList();
+    List<dynamic> results = response['tracks']['items'];
+    final List<SongInfo> searchResults = results.map((result) => SongInfo.fromJson(result)).toList();
     return searchResults;
   }
 }
