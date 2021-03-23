@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:song_reads/constants/enums.dart';
 
 class CommentSourceInfo extends StatelessWidget {
@@ -19,7 +20,6 @@ class CommentSourceInfo extends StatelessWidget {
 List<Widget> sourceContentWidgets(dynamic sourceData) {
   String title;
   String uploadDetails;
-  //TODO: format these two to be short if more than a thousand ("1K")
   String commentsCount;
   String likes;
 
@@ -29,14 +29,14 @@ List<Widget> sourceContentWidgets(dynamic sourceData) {
     case CommentSource.youtube:
       title = source.title;
       uploadDetails = source.channelTitle;
-      commentsCount = source.numComments.toString();
-      likes = source.likes.toString() + '%';
+      commentsCount = NumberFormat.compact().format(source.numComments);
+      likes = NumberFormat.compact().format(source.likes);
       break;
     case CommentSource.reddit:
       title = source.title;
       uploadDetails = '/r/${source.subreddit} - ${source.author}';
-      commentsCount = source.numComments.toString();
-      likes = source.likes.toString();
+      commentsCount = NumberFormat.compact().format(source.numComments);
+      likes = NumberFormat.compact().format(source.likes);
       break;
     case CommentSource.genius:
         //TODO: Handle this case where not all fields are non-null

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:intl/intl.dart';
 import 'package:song_reads/models/models.dart';
 
 
@@ -37,7 +38,7 @@ class CommentInfoView extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(left: 4.0),
                               //TODO: this is showing as null for YT vids, fix
-                              child: Text(commentInfo.likes.toString()),
+                              child: Text(NumberFormat.compact().format(commentInfo.likes)),
                             ),
                           ],
                         ),
