@@ -12,13 +12,10 @@ class YouTubeVideo extends Source {
   YouTubeVideo({this.id, this.likes, this.title, this.channelTitle, this.numComments});
 
   factory YouTubeVideo.fromJson(Map<String, dynamic> json) {
-    final int likes = int.parse(json['statistics']['likeCount']);
-    final int dislikes = int.parse(json['statistics']['dislikeCount']);
-
+    // final int dislikes = int.parse(json['statistics']['dislikeCount']);
     return YouTubeVideo(
         id: json['id'],
-        //Setting this as a percentage for readability
-        likes: (100 * likes / (likes + dislikes) ).ceil(),
+        likes: int.parse(json['statistics']['likeCount']),
         title: json['snippet']['title'],
         channelTitle: json['snippet']['channelTitle'],
         numComments: int.parse(json['statistics']['commentCount']),

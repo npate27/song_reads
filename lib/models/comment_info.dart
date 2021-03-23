@@ -19,7 +19,7 @@ class CommentInfo {
       case CommentSource.youtube:
         info = CommentInfo(
           id: json['id'],
-          likes: json['snippet']['topLevelComment']['likeCount'],
+          likes: json['snippet']['topLevelComment']['snippet']['likeCount'],
           user: json['snippet']['topLevelComment']['snippet']['authorDisplayName'],
           text: json['snippet']['topLevelComment']['snippet']['textDisplay'],
           commentSource: commentSource,
