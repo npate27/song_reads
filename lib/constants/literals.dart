@@ -16,4 +16,8 @@ const String spotifyAuthTokenUrl = 'https://accounts.spotify.com/api/token/';
 
 // ===== Preferences =====
 //Besides maxResults, sources are all just the toString'd version of the CommentSource enums
-const String maxResultsPreferenceKey = "max_results";
+const String maxResultsPreferenceKey = 'max_results';
+
+// ===== Token Store =====
+const String spotifyAccessTokenKey = 'spotify_access_token';
+const String spotifyAccessTokenExpiryKey = 'spotify_access_token_expiry';
