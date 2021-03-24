@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:song_reads/utils/secrets_utils.dart';
 
-Map<String,dynamic> parseResponse(http.Response response) {
+dynamic parseResponse(http.Response response) {
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
   } else {

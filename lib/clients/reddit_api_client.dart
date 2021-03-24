@@ -29,10 +29,11 @@ class RedditApiClient extends ApiClient {
 
   @override
   Future<List<CommentInfo>> getSongComments(String id) async {
-    final String uri = '${LiteralConstants.baseRedditApiUrl}/comments/$id.json&sort=top';
+    final String uri = '${LiteralConstants.baseRedditApiUrl}/comments/$id.json';
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
-    final List<dynamic> commentResult = sourceType.resultsFromResponse(response, true);
+    //getting second elem since first elem contains thread info. TODO: do this by looking at [data][children][kind] == "t1"
+    final commentResult = sourceType.resultsFromResponse(response[1], true);
     final List<CommentInfo> result = commentResult.map((result) => CommentInfo.fromJson(result['data'], sourceType)).toList();
     return result;
   }

@@ -59,8 +59,7 @@ extension CommentSourceResultsDataPath on CommentSource {
       case CommentSource.youtube:
         return isForComments ?  resultJson['items'] : resultJson['items'].take(maxResults).toList();
       case CommentSource.reddit:
-        //getting second elem since first elem contains thread info. TODO: do this by looking at [data][children][kind] == "t1"
-        return isForComments ? resultJson[1]['data']['children'] : resultJson['data']['children'].take(maxResults).toList();
+        return isForComments ? resultJson['data']['children'] : resultJson['data']['children'].take(maxResults).toList();
     }
   }
 }
