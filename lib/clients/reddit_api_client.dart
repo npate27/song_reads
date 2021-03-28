@@ -33,8 +33,10 @@ class RedditApiClient extends ApiClient {
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
     //getting second elem since first elem contains thread info. TODO: do this by looking at [data][children][kind] == "t1"
-    final commentResult = sourceType.resultsFromResponse(response[1], true);
-    final List<CommentInfo> result = commentResult.map((result) => CommentInfo.fromJson(result['data'], sourceType)).toList();
-    return result;
+    final List<dynamic> commentResult = sourceType.resultsFromResponse(response[1], true);
+    Map<String, dynamic> map = Map();
+    map['commentResult'] = commentResult;
+    map['sourceType'] = sourceType;
+    return compute(parseJsonToCommentList, map);
   }
 }

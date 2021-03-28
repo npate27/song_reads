@@ -51,7 +51,9 @@ class YouTubeApiClient extends ApiClient {
     final uriEncoded = Uri.encodeFull(uri);
     final response = parseResponse(await httpClient.get(uriEncoded));
     final List<dynamic> commentResult = sourceType.resultsFromResponse(response, true);
-    final List<CommentInfo> result = commentResult.map((result) => CommentInfo.fromJson(result, sourceType)).toList();
-    return result;
+    Map<String, dynamic> map = Map();
+    map['commentResult'] = commentResult;
+    map['sourceType'] = sourceType;
+    return compute(parseJsonToCommentList, map);
   }
 }
