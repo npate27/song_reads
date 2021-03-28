@@ -39,8 +39,15 @@ class SongReads extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client))),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SearchSourceBloc>(
+          create: (BuildContext context) => SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client))),
+        ),
+        BlocProvider<SongBloc>(
+          create: (BuildContext context) => SongBloc()
+        )
+      ],
       child: MaterialApp(
           title: LiteralConstants.appName,
           theme: ThemeData(

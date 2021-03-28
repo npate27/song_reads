@@ -27,7 +27,7 @@ class _CommentsPageState extends State<CommentsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(child: Expanded(child: songSourceCommentsBlocBuilder(bloc, widget.sourceData.id, widget.sourceData.commentSource)))
+            Container(child: Expanded(child: songSearchCommentsBlocBuilder(bloc, widget.sourceData.id, widget.sourceData.commentSource)))
           ],
         ),
       ),
@@ -43,7 +43,7 @@ class _CommentsPageState extends State<CommentsPage> {
 
 
 //Generate ListView of song sources for comments
-BlocBuilder<SearchSourceBloc, SearchState> songSourceCommentsBlocBuilder(SearchSourceBloc bloc, String sourceId, CommentSource source) {
+BlocBuilder<SearchSourceBloc, SearchState> songSearchCommentsBlocBuilder(SearchSourceBloc bloc, String sourceId, CommentSource source) {
   return BlocBuilder<SearchSourceBloc, SearchState>(
       cubit: bloc,
       builder: (context, state) {

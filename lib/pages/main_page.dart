@@ -18,8 +18,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  //TODO: make this dynamic based on manual search or detection
-  SongInfo songInfo = SongInfo(title: "10%", artist: "KAYTRANADA, Kali Uchis", album: "BUBBA", artworkImage: "https://i.scdn.co/image/ab67616d0000b2739b6375bad39943011986c247");
   //TODO: maybe make this an enum so can be expanded upon later
   List<bool> isSectionExpanded = [true, true]; //[Song section, Album section]
   //TODO: manage this with bloc? or too complex? Just dont want to redraw entire widget tree because of this...
@@ -74,9 +72,9 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ],
               ),
-              NowPlayingCard(songInfo: songInfo),
+              songBlocBuilder(),
               SectionHeader(sectionTitle: LiteralConstants.songCommentHeader, headerIndex: 0, collapseHeaderCallBack: collapseHeaderCallBack,),
-              Visibility(visible: isSectionExpanded[0], child: Container(child: Expanded(child: songSourceBlocBuilder(songInfo)))),
+              Visibility(visible: isSectionExpanded[0], child: Container(child: Expanded(child: songSearchBlocBuilder()))),
               SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader, headerIndex: 1, collapseHeaderCallBack: collapseHeaderCallBack,),
               // Visibility(visible: isSectionExpanded[1], child: Container(child: Expanded(child: songSourceBlocBuilder()))),
             ],
@@ -88,16 +86,23 @@ class _MainPageState extends State<MainPage> {
 }
 
 //Generate ListView of song sources for comments
-BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder(SongInfo songInfo) {
+BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
   return BlocBuilder<SearchSourceBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchEmpty) {
-          //TODO: get the query dynamically via OS-specific APIs, or allow manual search
-          BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(title: songInfo.title, artist: songInfo.artist));
+          //TODO: get the query dynamically via OS-specific APIs
+          return Center(
+            child: Text("No results yet"),
+          );
         }
         if (state is SearchError) {
           return Center(
             child: Text('Failed to fetch source results'),
+          );
+        }
+        if (state is SearchLoading) {
+          return Center(
+            child: CircularProgressIndicator()
           );
         }
         if (state is SearchSourceLoaded) {
@@ -113,7 +118,28 @@ BlocBuilder<SearchSourceBloc, SearchState> songSourceBlocBuilder(SongInfo songIn
           );
         }
         return Center(
-          child: CircularProgressIndicator(),
+          child: Text("No results yet")
+        );
+      }
+  );
+}
+
+//Update NowPlayingCard when new song is selected in modal
+BlocBuilder<SongBloc, SongState> songBlocBuilder() {
+  return BlocBuilder<SongBloc, SongState>(
+      builder: (context, state) {
+        if (state is SongEmpty) {
+          return Center(
+            child: Text("No song detected or selected, search for one")
+        );
+        }
+        if (state is SongLoaded) {
+          SongInfo songInfo = state.songInfo;
+          BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(title: songInfo.title, artist: songInfo.artist));
+          return NowPlayingCard(songInfo: songInfo);
+        }
+        return Center(
+            child: Text("No song detected or selected, search for one")
         );
       }
   );

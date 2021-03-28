@@ -1,6 +1,8 @@
 
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/clients/http_client_singleton.dart';
 import 'package:song_reads/models/song_info.dart';
@@ -68,7 +70,10 @@ SearchBar _searchBar(BuildContext context, SearchBarController searchBarControll
             title: Text(searchResult.title),
             subtitle: Text(searchResult.artist),
             leading: Image.network(searchResult.artworkImage, height: 100),
-            onTap: () { print("TEST"); },
+            onTap: () {
+              BlocProvider.of<SongBloc>(context).add(UpdateSong(songInfo: searchResult));
+              Navigator.of(context).pop();
+            },
             )
       );
     },
