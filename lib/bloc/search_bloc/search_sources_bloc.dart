@@ -25,8 +25,9 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
         //TODO: Make these lists of top N results to be merged into one list (random order? allow filtering?)
         Preferences preferences = await Preferences.instance;
         final int maxResults = preferences.maxResultsPref();
-        final List<Source> ytVideos = await ytRepository.searchSong(event.title, event.artist, maxResults);
-        final List<Source> redditThreads = await redditRepository.searchSong(event.title, event.artist, maxResults);
+        SongInfo songInfo = event.songInfo;
+        final List<Source> ytVideos = await ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        final List<Source> redditThreads = await redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
         List<Source> results = [...ytVideos, ...redditThreads];
         yield SearchSourceLoaded(results: results);
       } catch (_) { // TODO: More explicit exception

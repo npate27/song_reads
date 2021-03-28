@@ -3,19 +3,19 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:song_reads/constants/enums.dart';
+import 'package:song_reads/models/models.dart';
 
 abstract class SearchEvent extends Equatable {
   const SearchEvent();
 }
 
 class FetchSources extends SearchEvent {
-  final String title;
-  final String artist;
+  final SongInfo songInfo;
 
-  FetchSources({this.title, this.artist});
+  FetchSources({this.songInfo});
 
   @override
-  List<Object> get props => [title, artist];
+  List<Object> get props => [songInfo];
 }
 
 class FetchComments extends SearchEvent {

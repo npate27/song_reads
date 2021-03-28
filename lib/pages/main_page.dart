@@ -135,7 +135,7 @@ BlocBuilder<SongBloc, SongState> songBlocBuilder() {
         }
         if (state is SongLoaded) {
           SongInfo songInfo = state.songInfo;
-          BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(title: songInfo.title, artist: songInfo.artist));
+          BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo));
           return NowPlayingCard(songInfo: songInfo);
         }
         return Center(
