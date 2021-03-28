@@ -256,6 +256,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.5"
+  flutter_markdown:
+    dependency: "direct main"
+    description:
+      name: flutter_markdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.2"
   flutter_staggered_grid_view:
     dependency: transitive
     description:
@@ -320,6 +327,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0+4"
+  html_unescape:
+    dependency: "direct main"
+    description:
+      name: html_unescape
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   http:
     dependency: "direct main"
     description:
@@ -383,6 +397,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  markdown:
+    dependency: transitive
+    description:
+      name: markdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   matcher:
     dependency: transitive
     description:

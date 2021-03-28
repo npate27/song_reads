@@ -1,4 +1,5 @@
 import 'package:song_reads/constants/enums.dart';
+import 'package:html_unescape/html_unescape_small.dart';
 
 class CommentInfo {
   final String id;
@@ -30,7 +31,7 @@ class CommentInfo {
           id: json['id'],
           likes: json['score'],
           user: json['author'],
-          text: json['body'],
+          text: HtmlUnescape().convert(json['body_html']),
           commentSource: commentSource,
         );
         break;
