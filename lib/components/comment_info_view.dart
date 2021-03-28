@@ -37,7 +37,6 @@ class CommentInfoView extends StatelessWidget {
                             Icon(Icons.thumb_up, size: 15.0,),
                             Padding(
                               padding: const EdgeInsets.only(left: 4.0),
-                              //TODO: this is showing as null for YT vids, fix
                               child: Text(NumberFormat.compact().format(commentInfo.likes)),
                             ),
                           ],
