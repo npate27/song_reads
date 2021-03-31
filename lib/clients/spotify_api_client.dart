@@ -15,26 +15,41 @@ class SpotifyApiClient {
 
   Future<String> getAccessTokenWithAuth(TokenStore tokenStore) async {
     String clientKey = await loadSecretFromKey('spotify_client_id');
-    //TODO: another if statement here for refresh tokens
-    FlutterAppAuth appAuth = FlutterAppAuth();
-    final codeVerifier = tokenStore.accessTokenInfoFromKey(LiteralConstants.spotifyCodeVerifierKey);
-    final authCode = tokenStore.accessTokenInfoFromKey(LiteralConstants.spotifyAuthCodeKey);
-    final TokenResponse result = await appAuth.token(TokenRequest(
-        clientKey,
-        'songreads:/',
-        serviceConfiguration: AuthorizationServiceConfiguration('https://accounts.spotify.com/authorize', 'https://accounts.spotify.com/api/token'),
-        scopes: ['user-read-recently-played','user-read-currently-playing'],
-        authorizationCode: authCode,
-        codeVerifier: codeVerifier
-    ));
-    if (result != null) {
-      tokenStore.setAccessToken(LiteralConstants.spotifyRefreshTokenKey, result.refreshToken);
-      tokenStore.setAccessToken(LiteralConstants.spotifyAccessTokenKey, result.accessToken);
-      tokenStore.setAccessTokenExpiry(LiteralConstants.spotifyAccessTokenExpiryKey, result.accessTokenExpirationDateTime.toUtc().millisecondsSinceEpoch);
-      return result.accessToken;
+    if (isTokenExpired(tokenStore, LiteralConstants.spotifyAccessTokenExpiryKey)) {
+      //TODO: another if statement here for refresh tokens
+      FlutterAppAuth appAuth = FlutterAppAuth();
+      final codeVerifier = tokenStore.accessTokenInfoFromKey(
+          LiteralConstants.spotifyCodeVerifierKey);
+      final authCode = tokenStore.accessTokenInfoFromKey(
+          LiteralConstants.spotifyAuthCodeKey);
+      final TokenResponse result = await appAuth.token(TokenRequest(
+          clientKey,
+          'songreads:/',
+          serviceConfiguration: AuthorizationServiceConfiguration(
+              'https://accounts.spotify.com/authorize',
+              'https://accounts.spotify.com/api/token'),
+          scopes: ['user-read-recently-played', 'user-read-currently-playing'],
+          authorizationCode: authCode,
+          codeVerifier: codeVerifier
+      ));
+      if (result != null) {
+        tokenStore.setAccessToken(
+            LiteralConstants.spotifyRefreshTokenKey, result.refreshToken);
+        tokenStore.setAccessToken(
+            LiteralConstants.spotifyAccessTokenKey, result.accessToken);
+        tokenStore.setAccessTokenExpiry(
+            LiteralConstants.spotifyAccessTokenExpiryKey,
+            result.accessTokenExpirationDateTime
+                .toUtc()
+                .millisecondsSinceEpoch);
+        return result.accessToken;
+      }
+      //TODO handle this better
+      return null;
     }
-    //TODO handle this better
-    return null;
+    else {
+      return tokenStore.accessTokenInfoFromKey(LiteralConstants.spotifyAccessTokenKey);
+    }
   }
 
   Future<String> getAccessTokenWithoutAuth(TokenStore tokenStore) async {
