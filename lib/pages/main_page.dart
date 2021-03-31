@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:song_reads/bloc/blocs.dart';
@@ -34,11 +35,18 @@ class _MainPageState extends State<MainPage> {
   }
 
   @override
+  void initState() {
+    // initUniLinks();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.grey,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
             showModalBottomSheet(
               isScrollControlled: false,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
@@ -144,3 +152,19 @@ BlocBuilder<SongBloc, SongState> songBlocBuilder() {
       }
   );
 }
+
+
+// Future<void> _signInWithNoCodeExchange() async {
+//     String clientKey = await loadSecretFromKey('spotify_client_id');
+//     FlutterAppAuth appAuth = FlutterAppAuth();
+//     var authRequest = AuthorizationRequest(
+//       clientKey,
+//       'songreads:/',
+//       serviceConfiguration: AuthorizationServiceConfiguration('https://accounts.spotify.com/authorize', 'https://accounts.spotify.com/api/token'),
+//       scopes: ['user-read-recently-played','user-read-currently-playing'],
+//     );
+//     final AuthorizationResponse result = await appAuth.authorize(authRequest);
+//     if (result != null) {
+//       print(result.codeVerifier);
+//     }
+// }

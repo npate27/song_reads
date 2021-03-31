@@ -21,3 +21,6 @@ const String maxResultsPreferenceKey = 'max_results';
 // ===== Token Store =====
 const String spotifyAccessTokenKey = 'spotify_access_token';
 const String spotifyAccessTokenExpiryKey = 'spotify_access_token_expiry';
+const String spotifyRefreshTokenKey = 'spotify_refresh_token_expiry';
+const String spotifyAuthCodeKey = 'spotify_auth_code_key';
+const String spotifyCodeVerifierKey = 'spotify_code_verifier_key';

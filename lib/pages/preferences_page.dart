@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/utils/preferences.dart';
+import 'package:song_reads/utils/spotify_auth.dart';
 
 class PreferencesPage extends StatefulWidget {
   PreferencesPage({Key key}) : super(key: key);
@@ -54,6 +55,19 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                 subtitle: 'Version, Licences and Legal',
                                 leading: Icon(Icons.info_outline_rounded),
                                 onPressed: (BuildContext context) {showAboutDialog(context: context);},
+                              )
+                            ]
+                        ),
+                        SettingsSection(
+                            title: 'Login',
+                            tiles: [
+                              SettingsTile(
+                                title: 'Login With Spotify',
+                                subtitle: 'Lets the SongReads use your currently playing song to find comments',
+                                leading: Icon(Icons.login),
+                                onPressed: (BuildContext context) async{
+                                  logInAuthForSpotify();
+                                },
                               )
                             ]
                         )
