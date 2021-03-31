@@ -33,14 +33,13 @@ Future<String> spotifyBase64EncodedToken() async {
   return base64.encode(utf8.encode('$clientId:$clientSecret'));
 }
 
+
 bool isTokenExpired(TokenStore tokenStore, String accessTokenKeyExpiry) {
-  int expiryTimeInMillis = tokenStore.accessTokenInfoFromKey(
-      accessTokenKeyExpiry);
+  int expiryTimeInMillis = tokenStore.accessTokenInfoFromKey(accessTokenKeyExpiry);
   if (expiryTimeInMillis == null) {
     return true;
   } else {
-    DateTime expiryTime = DateTime.fromMillisecondsSinceEpoch(
-        expiryTimeInMillis).toUtc();
+    DateTime expiryTime = DateTime.fromMillisecondsSinceEpoch(expiryTimeInMillis).toUtc();
     DateTime currentTime = DateTime.now().toUtc();
     return currentTime.isAfter(expiryTime);
   }
@@ -48,6 +47,5 @@ bool isTokenExpired(TokenStore tokenStore, String accessTokenKeyExpiry) {
 
 //TODO: dont store auth key, use refresh token instead
 bool isUserLoggedIn(TokenStore tokenStore, String authCodeKey){
-  String authCode = tokenStore.accessTokenInfoFromKey(authCodeKey);
-  return authCode.isNotEmpty && authCode != null;
+  return tokenStore.accessTokenInfoFromKey(authCodeKey) != null;
 }
