@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/utils/preferences.dart';
-import 'package:song_reads/utils/spotify_auth.dart';
+import 'package:song_reads/utils/auth_utils.dart';
+import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
 class PreferencesPage extends StatefulWidget {
   PreferencesPage({Key key}) : super(key: key);
@@ -66,7 +68,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                 subtitle: 'Lets the SongReads use your currently playing song to find comments',
                                 leading: Icon(Icons.login),
                                 onPressed: (BuildContext context) async{
-                                  logInAuthForSpotify();
+                                  //TODO: process if cancelled/failed
+                                  logInAuthPKCE(LiteralConstants.spotifyClientKey, LiteralConstants.redirectUrl, SpotifyApiClient.authConfig, SpotifyApiClient.userListeningScopes);
                                 },
                               )
                             ]

@@ -5,59 +5,31 @@ import 'package:song_reads/models/models.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/utils/api_utils.dart';
 import 'package:song_reads/utils/secrets_utils.dart';
-import 'package:song_reads/utils/spotify_auth.dart';
+import 'package:song_reads/utils/auth_utils.dart';
 import 'package:song_reads/utils/token_store.dart';
 
+// https://developer.spotify.com/documentation/general/guides/authorization-guide/
 class SpotifyApiClient {
   final http.Client httpClient;
+  static final AuthorizationServiceConfiguration authConfig = AuthorizationServiceConfiguration(LiteralConstants.spotifyAuthUrl, LiteralConstants.spotifyAuthTokenUrl);
+  static final List<String> userListeningScopes = ['user-read-recently-played','user-read-currently-playing'];
 
   SpotifyApiClient({@required this.httpClient,}) : assert(httpClient != null);
 
   Future<String> getAccessTokenWithAuth(TokenStore tokenStore) async {
-    String clientKey = await loadSecretFromKey('spotify_client_id');
     if (isTokenExpired(tokenStore, LiteralConstants.spotifyAccessTokenExpiryKey)) {
-      //TODO: another if statement here for refresh tokens
-      FlutterAppAuth appAuth = FlutterAppAuth();
-      final codeVerifier = tokenStore.getValue(
-          LiteralConstants.spotifyCodeVerifierKey);
-      final authCode = tokenStore.getValue(
-          LiteralConstants.spotifyAuthCodeKey);
-      final TokenResponse result = await appAuth.token(TokenRequest(
-          clientKey,
-          'songreads:/',
-          serviceConfiguration: AuthorizationServiceConfiguration(
-              'https://accounts.spotify.com/authorize',
-              'https://accounts.spotify.com/api/token'),
-          scopes: ['user-read-recently-played', 'user-read-currently-playing'],
-          authorizationCode: authCode,
-          codeVerifier: codeVerifier
-      ));
-      if (result != null) {
-        tokenStore.setValue(
-            LiteralConstants.spotifyRefreshTokenKey, result.refreshToken);
-        tokenStore.setValue(
-            LiteralConstants.spotifyAccessTokenKey, result.accessToken);
-        tokenStore.setValue(
-            LiteralConstants.spotifyAccessTokenExpiryKey,
-            result.accessTokenExpirationDateTime
-                .toUtc()
-                .millisecondsSinceEpoch);
-        return result.accessToken;
-      }
-      //TODO handle this better
-      return null;
+        return refreshAccessToken(LiteralConstants.spotifyClientKey, authConfig, userListeningScopes);
     }
     else {
-      return tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey);
+      tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey);
     }
   }
 
   Future<String> getAccessTokenWithoutAuth(TokenStore tokenStore) async {
     if (isTokenExpired(tokenStore, LiteralConstants.spotifyAccessTokenExpiryKey)) {
-      final uriEncoded = Uri.encodeFull(LiteralConstants.spotifyAuthTokenUrl);
-      final authToken = await spotifyBase64EncodedToken();
+      final authToken = await base64EncodedToken(LiteralConstants.spotifyClientKey, LiteralConstants.spotifySecretKey);
       final response = parseResponse(await httpClient.post(
-          uriEncoded,
+          Uri.encodeFull(LiteralConstants.spotifyAuthTokenUrl),
           headers: {
             'Content-type': 'application/x-www-form-urlencoded',
             'Authorization': 'Basic $authToken'
@@ -75,14 +47,13 @@ class SpotifyApiClient {
 
   Future<String> getAccessToken() async {
     TokenStore tokenStore = await TokenStore.instance;
-    return isUserLoggedIn(tokenStore, LiteralConstants.spotifyAuthCodeKey) ? getAccessTokenWithAuth(tokenStore) : getAccessTokenWithoutAuth(tokenStore);
+    return isUserLoggedIn(tokenStore) ? getAccessTokenWithAuth(tokenStore) : getAccessTokenWithoutAuth(tokenStore);
   }
 
   Future<List<SongInfo>> getSongSearchResults(String text) async {
-    final uriEncoded = Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=$text&type=track&market=US&limit=10&offset=5');
     final accessToken = await getAccessToken();
     final response = parseResponse(await httpClient.get(
-        uriEncoded,
+        Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=$text&type=track&market=US&limit=10&offset=5'),
         headers: {
           'Content-type': 'application/json',
           'Authorization': 'Bearer $accessToken'
