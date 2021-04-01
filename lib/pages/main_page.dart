@@ -152,19 +152,3 @@ BlocBuilder<SongBloc, SongState> songBlocBuilder() {
       }
   );
 }
-
-
-// Future<void> _signInWithNoCodeExchange() async {
-//     String clientKey = await loadSecretFromKey('spotify_client_id');
-//     FlutterAppAuth appAuth = FlutterAppAuth();
-//     var authRequest = AuthorizationRequest(
-//       clientKey,
-//       'songreads:/',
-//       serviceConfiguration: AuthorizationServiceConfiguration('https://accounts.spotify.com/authorize', 'https://accounts.spotify.com/api/token'),
-//       scopes: ['user-read-recently-played','user-read-currently-playing'],
-//     );
-//     final AuthorizationResponse result = await appAuth.authorize(authRequest);
-//     if (result != null) {
-//       print(result.codeVerifier);
-//     }
-// }
