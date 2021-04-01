@@ -21,7 +21,7 @@ class SpotifyApiClient {
         return refreshAccessToken(LiteralConstants.spotifyClientKey, authConfig, userListeningScopes);
     }
     else {
-      tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey);
+      return tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey);
     }
   }
 
