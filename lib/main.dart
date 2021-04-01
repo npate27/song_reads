@@ -7,6 +7,7 @@ import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/clients/http_client_singleton.dart';
 import 'package:song_reads/repositories/reddit_repository.dart';
 import 'package:song_reads/repositories/repositories.dart';
+import 'package:song_reads/repositories/spotify_repository.dart';
 import 'package:song_reads/router.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
@@ -45,7 +46,7 @@ class SongReads extends StatelessWidget {
           create: (BuildContext context) => SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client))),
         ),
         BlocProvider<SongBloc>(
-          create: (BuildContext context) => SongBloc()
+          create: (BuildContext context) => SongBloc(spotifyRepository: SpotifyRepository(apiClient: SpotifyApiClient(httpClient: AppHttpClient().client)))
         )
       ],
       child: MaterialApp(

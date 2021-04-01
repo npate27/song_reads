@@ -50,6 +50,24 @@ class SpotifyApiClient {
     return isUserLoggedIn(tokenStore) ? getAccessTokenWithAuth(tokenStore) : getAccessTokenWithoutAuth(tokenStore);
   }
 
+  Future<SongInfo> getCurrentlyPlayingSong() async{
+    TokenStore tokenStore = await TokenStore.instance;
+    if (isUserLoggedIn(tokenStore)) {
+      final accessToken = await getAccessTokenWithAuth(tokenStore);
+      final response = parseResponse(await httpClient.get(
+          Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/me/player/currently-playing?market=US'),
+          headers: {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer $accessToken'
+          }
+      ));
+      return (response != null) ? SongInfo.fromJson(response['item']) : null;
+    }
+    else {
+      return null;
+    }
+  }
+
   Future<List<SongInfo>> getSongSearchResults(String text) async {
     final accessToken = await getAccessToken();
     final response = parseResponse(await httpClient.get(

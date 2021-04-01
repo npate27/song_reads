@@ -8,6 +8,11 @@ abstract class SongEvent extends Equatable {
   const SongEvent();
 }
 
+class FindCurrentlyPlayingSpotifySong extends SongEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class UpdateSong extends SongEvent {
   final SongInfo songInfo;
 

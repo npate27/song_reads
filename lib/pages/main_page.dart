@@ -10,6 +10,7 @@ import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
+import 'package:song_reads/utils/token_store.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -132,11 +133,12 @@ BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
   );
 }
 
-//Update NowPlayingCard when new song is selected in modal
+//Update NowPlayingCard when new song is selected in modal or currently playing song if any on spotify if user is logged in
 BlocBuilder<SongBloc, SongState> songBlocBuilder() {
   return BlocBuilder<SongBloc, SongState>(
       builder: (context, state) {
         if (state is SongEmpty) {
+          BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
           return Center(
             child: Text("No song detected or selected, search for one")
         );

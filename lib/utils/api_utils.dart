@@ -6,7 +6,11 @@ import 'package:song_reads/constants/enums.dart';
 dynamic parseResponse(http.Response response) {
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
-  } else {
+  }
+  else if (response.statusCode == 204) {
+    return null;
+  }
+  else {
     throw Exception('Failed to load response');
   }
 }
