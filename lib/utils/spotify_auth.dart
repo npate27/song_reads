@@ -17,8 +17,8 @@ Future<bool> logInAuthForSpotify() async{
   if (result != null) {
     TokenStore tokenStore = await TokenStore.instance;
     //TODO: dont store auth key, use refresh token instead
-    tokenStore.setAccessToken(LiteralConstants.spotifyAuthCodeKey, result.authorizationCode);
-    tokenStore.setAccessToken(LiteralConstants.spotifyCodeVerifierKey, result.codeVerifier);
+    tokenStore.setValue(LiteralConstants.spotifyAuthCodeKey, result.authorizationCode);
+    tokenStore.setValue(LiteralConstants.spotifyCodeVerifierKey, result.codeVerifier);
     return true;
   }
   return false;
@@ -35,7 +35,7 @@ Future<String> spotifyBase64EncodedToken() async {
 
 
 bool isTokenExpired(TokenStore tokenStore, String accessTokenKeyExpiry) {
-  int expiryTimeInMillis = tokenStore.accessTokenInfoFromKey(accessTokenKeyExpiry);
+  int expiryTimeInMillis = tokenStore.getValue(accessTokenKeyExpiry);
   if (expiryTimeInMillis == null) {
     return true;
   } else {
@@ -47,5 +47,5 @@ bool isTokenExpired(TokenStore tokenStore, String accessTokenKeyExpiry) {
 
 //TODO: dont store auth key, use refresh token instead
 bool isUserLoggedIn(TokenStore tokenStore, String authCodeKey){
-  return tokenStore.accessTokenInfoFromKey(authCodeKey) != null;
+  return tokenStore.getValue(authCodeKey) != null;
 }

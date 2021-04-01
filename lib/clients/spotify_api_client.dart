@@ -18,9 +18,9 @@ class SpotifyApiClient {
     if (isTokenExpired(tokenStore, LiteralConstants.spotifyAccessTokenExpiryKey)) {
       //TODO: another if statement here for refresh tokens
       FlutterAppAuth appAuth = FlutterAppAuth();
-      final codeVerifier = tokenStore.accessTokenInfoFromKey(
+      final codeVerifier = tokenStore.getValue(
           LiteralConstants.spotifyCodeVerifierKey);
-      final authCode = tokenStore.accessTokenInfoFromKey(
+      final authCode = tokenStore.getValue(
           LiteralConstants.spotifyAuthCodeKey);
       final TokenResponse result = await appAuth.token(TokenRequest(
           clientKey,
@@ -33,11 +33,11 @@ class SpotifyApiClient {
           codeVerifier: codeVerifier
       ));
       if (result != null) {
-        tokenStore.setAccessToken(
+        tokenStore.setValue(
             LiteralConstants.spotifyRefreshTokenKey, result.refreshToken);
-        tokenStore.setAccessToken(
+        tokenStore.setValue(
             LiteralConstants.spotifyAccessTokenKey, result.accessToken);
-        tokenStore.setAccessTokenExpiry(
+        tokenStore.setValue(
             LiteralConstants.spotifyAccessTokenExpiryKey,
             result.accessTokenExpirationDateTime
                 .toUtc()
@@ -48,7 +48,7 @@ class SpotifyApiClient {
       return null;
     }
     else {
-      return tokenStore.accessTokenInfoFromKey(LiteralConstants.spotifyAccessTokenKey);
+      return tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey);
     }
   }
 
@@ -64,12 +64,12 @@ class SpotifyApiClient {
           },
           body: 'grant_type=client_credentials'
       ));
-      tokenStore.setAccessToken(LiteralConstants.spotifyAccessTokenKey, response['access_token']);
-      tokenStore.setAccessTokenExpiry(LiteralConstants.spotifyAccessTokenExpiryKey, DateTime.now().add(Duration(seconds: response['expires_in'])).toUtc().millisecondsSinceEpoch);
+      tokenStore.setValue(LiteralConstants.spotifyAccessTokenKey, response['access_token']);
+      tokenStore.setValue(LiteralConstants.spotifyAccessTokenExpiryKey, DateTime.now().add(Duration(seconds: response['expires_in'])).toUtc().millisecondsSinceEpoch);
       return response['access_token'];
     }
     else {
-      return tokenStore.accessTokenInfoFromKey(LiteralConstants.spotifyAccessTokenKey);
+      return tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey);
     }
   }
 

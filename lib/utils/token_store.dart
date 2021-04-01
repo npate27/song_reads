@@ -13,9 +13,8 @@ class TokenStore {
   }
 
   //Could be String or int depending on key passed in
-  dynamic accessTokenInfoFromKey(String accessTokenKey) => _getValue(accessTokenKey) ?? null;
-  Future<void> setAccessToken(String accessTokenKey, String accessToken) => _setValue(accessTokenKey, accessToken);
-  Future<void> setAccessTokenExpiry(String accessTokenKey, int expirationEpcohMillis) => _setValue(accessTokenKey, expirationEpcohMillis);
+  dynamic getValue(String key) => _getValue(key) ?? null;
+  Future<void> setValue(String key, dynamic value) => _setValue(key, value);
 
   T _getValue<T>(dynamic key, {T defaultValue}) => _box.get(key, defaultValue: defaultValue) as T;
   Future<void> _setValue<T>(dynamic key, T value) => _box.put(key, value);
