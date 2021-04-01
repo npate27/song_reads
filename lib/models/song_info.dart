@@ -6,6 +6,7 @@ class SongInfo {
 
   SongInfo({this.title, this.artist, this.album, this.artworkImage});
 
+  //TODO: parse better for multiple artists
   factory SongInfo.fromJson(Map<String, dynamic> json) {
     return SongInfo(
         title: json['name'],
