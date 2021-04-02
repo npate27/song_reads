@@ -7,6 +7,7 @@ dynamic parseResponse(http.Response response) {
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
   }
+  // For when spotify is not open or ad is playing
   else if (response.statusCode == 204) {
     return null;
   }
