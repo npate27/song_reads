@@ -13,6 +13,11 @@ class FindCurrentlyPlayingSpotifySong extends SongEvent {
   List<Object> get props => [];
 }
 
+class SongLoginCheck extends SongEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class UpdateSong extends SongEvent {
   final SongInfo songInfo;
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -135,18 +137,33 @@ BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
 
 //Update NowPlayingCard when new song is selected in modal or currently playing song if any on spotify if user is logged in
 BlocBuilder<SongBloc, SongState> songBlocBuilder() {
+  Timer delayNextQueryTimer;
   return BlocBuilder<SongBloc, SongState>(
       builder: (context, state) {
-        if (state is SongEmpty) {
-          BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
+        if (state is SongDiscovery) {
+          if(state.isLoggedIn) {
+            BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
+          }
           return Center(
             child: Text("No song detected or selected, search for one")
         );
         }
         if (state is SongLoaded) {
           SongInfo songInfo = state.songInfo;
+          int delayNextQueryMs = state.delayNextQueryMs;
+          delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs), () {
+            //TODO handle ads
+            BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
+          });
+          //Cancel timer since we revert to manual selection
+          if(delayNextQueryMs == null) {
+            delayNextQueryTimer.cancel();
+          }
           BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo));
           return NowPlayingCard(songInfo: songInfo);
+        }
+        if (state is SongInit) {
+          BlocProvider.of<SongBloc>(context).add(SongLoginCheck());
         }
         return Center(
             child: Text("No song detected or selected, search for one")
