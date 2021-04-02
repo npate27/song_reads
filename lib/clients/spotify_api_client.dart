@@ -50,7 +50,7 @@ class SpotifyApiClient {
     return isUserLoggedIn(tokenStore) ? getAccessTokenWithAuth(tokenStore) : getAccessTokenWithoutAuth(tokenStore);
   }
 
-  Future<SongInfo> getCurrentlyPlayingSong() async{
+  Future<List<Object>> getCurrentlyPlayingSong() async{
     TokenStore tokenStore = await TokenStore.instance;
     if (isUserLoggedIn(tokenStore)) {
       final accessToken = await getAccessTokenWithAuth(tokenStore);
@@ -61,7 +61,14 @@ class SpotifyApiClient {
             'Authorization': 'Bearer $accessToken'
           }
       ));
-      return (response != null) ? SongInfo.fromJson(response['item']) : null;
+      if (response != null) {
+        SongInfo songInfo = SongInfo.fromJson(response['item']);
+        final int currentSongProgressMs = response['progress_ms'];
+        final int songDurationMs = response['item']['duration_ms'];
+        final int delayNextCurrentSongQueryMs = songDurationMs - currentSongProgressMs;
+        return [songInfo, delayNextCurrentSongQueryMs];
+      }
+      return [];
     }
     else {
       return null;

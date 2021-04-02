@@ -12,7 +12,7 @@ class SpotifyRepository {
     return await apiClient.getAccessToken();
   }
 
-  Future<SongInfo> getCurrentlyPlayingSong() async{
+  Future<List<Object>> getCurrentlyPlayingSong() async{
     return await apiClient.getCurrentlyPlayingSong();
   }
 
