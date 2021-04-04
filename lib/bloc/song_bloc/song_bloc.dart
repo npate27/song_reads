@@ -26,7 +26,7 @@ class SongBloc extends Bloc<SongEvent, SongState> {
         if(currentSongResults.isEmpty) {
           //Could be an advert or spotify is not open, wait before requerying
           await Future.delayed(Duration(milliseconds: 5000));
-          yield SongDiscovery();
+          yield SongDiscovery(isLoggedIn: true);
         } else {
           //Parse song and indicate time till next song takes over
           SongInfo songInfo = currentSongResults[0];
@@ -40,7 +40,8 @@ class SongBloc extends Bloc<SongEvent, SongState> {
     }
     else if (event is SongLoginCheck) {
       TokenStore tokenStore = await TokenStore.instance;
-      yield(SongDiscovery(isLoggedIn: isUserLoggedIn(tokenStore)));
+      bool isLoggedIn = isUserLoggedIn(tokenStore);
+      yield(SongDiscovery(isLoggedIn: isLoggedIn));
     }
   }
 }
