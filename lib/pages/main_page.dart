@@ -137,7 +137,9 @@ BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
 
 //Update NowPlayingCard when new song is selected in modal or currently playing song if any on spotify if user is logged in
 BlocBuilder<SongBloc, SongState> songBlocBuilder() {
-  Timer delayNextQueryTimer;
+  //Empty timer init since it cant be null
+  Timer delayNextQueryTimer = Timer(Duration(seconds: 0), () => {});
+  SongInfo curSongInfo;
   return BlocBuilder<SongBloc, SongState>(
       builder: (context, state) {
         if (state is SongDiscovery) {
@@ -151,15 +153,24 @@ BlocBuilder<SongBloc, SongState> songBlocBuilder() {
         if (state is SongLoaded) {
           SongInfo songInfo = state.songInfo;
           int delayNextQueryMs = state.delayNextQueryMs;
-          delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs), () {
-            //TODO handle ads
-            BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
-          });
+
           //Cancel timer since we revert to manual selection
           if(delayNextQueryMs == null) {
             delayNextQueryTimer.cancel();
           }
-          BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo));
+          //Wait for song to end to requery if needed
+          else {
+            delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs), () {
+              //TODO handle ads
+              BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
+            });
+          }
+
+          //Only requery sources if song changes
+          if (songInfo != curSongInfo) {
+            curSongInfo = songInfo;
+            BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo));
+          }
           return NowPlayingCard(songInfo: songInfo);
         }
         if (state is SongInit) {
