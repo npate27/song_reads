@@ -1,4 +1,6 @@
-class SongInfo {
+import 'package:equatable/equatable.dart';
+
+class SongInfo extends Equatable{
   final String title;
   final String artist;
   final String album;
@@ -15,4 +17,7 @@ class SongInfo {
         artworkImage: json['album']['images'][0]['url']
     );
   }
+
+  @override
+  List<Object> get props => [title, artist, album];
 }
