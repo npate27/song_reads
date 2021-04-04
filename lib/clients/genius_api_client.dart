@@ -22,7 +22,7 @@ class GeniusApiClient extends ApiClient{
     final String query = '$title $artist';
     //TODO: use authorization header for key
     final String uri = '${LiteralConstants.baseGeniusApiUrl}/search?q=$query&access_token=$key';
-    final uriEncoded = Uri.encodeFull(uri);
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: currently assumes top result is the desired one, needs more validation, like title validation
     //TODO: check if hits is empty in api client before passing this over

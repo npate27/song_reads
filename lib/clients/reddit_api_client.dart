@@ -18,7 +18,7 @@ class RedditApiClient extends ApiClient {
     final String query = '$title $artist';
     //TODO: filter my music relevant subreddits only
     final String uri = '${LiteralConstants.baseRedditApiUrl}/search.json?q=$query&sort=top';
-    final uriEncoded = Uri.encodeFull(uri);
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: check if hits is empty in api client before passing this over
 
@@ -30,7 +30,7 @@ class RedditApiClient extends ApiClient {
   @override
   Future<List<CommentInfo>> getSongComments(String id) async {
     final String uri = '${LiteralConstants.baseRedditApiUrl}/comments/$id.json';
-    final uriEncoded = Uri.encodeFull(uri);
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //getting second elem since first elem contains thread info. TODO: do this by looking at [data][children][kind] == "t1"
     final List<dynamic> commentResult = sourceType.resultsFromResponse(response[1], true);

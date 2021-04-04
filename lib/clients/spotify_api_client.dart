@@ -29,7 +29,7 @@ class SpotifyApiClient {
     if (isTokenExpired(tokenStore, LiteralConstants.spotifyAccessTokenExpiryKey)) {
       final authToken = await base64EncodedToken(LiteralConstants.spotifyClientKey, LiteralConstants.spotifySecretKey);
       final response = parseResponse(await httpClient.post(
-          Uri.encodeFull(LiteralConstants.spotifyAuthTokenUrl),
+          Uri.parse(Uri.encodeFull(LiteralConstants.spotifyAuthTokenUrl)),
           headers: {
             'Content-type': 'application/x-www-form-urlencoded',
             'Authorization': 'Basic $authToken'
@@ -55,7 +55,7 @@ class SpotifyApiClient {
     if (isUserLoggedIn(tokenStore)) {
       final accessToken = await getAccessTokenWithAuth(tokenStore);
       final response = parseResponse(await httpClient.get(
-          Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/me/player/currently-playing?market=US'),
+          Uri.parse(Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/me/player/currently-playing?market=US')),
           headers: {
             'Content-type': 'application/json',
             'Authorization': 'Bearer $accessToken'
@@ -78,7 +78,7 @@ class SpotifyApiClient {
   Future<List<SongInfo>> getSongSearchResults(String text) async {
     final accessToken = await getAccessToken();
     final response = parseResponse(await httpClient.get(
-        Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=$text&type=track&market=US&limit=10&offset=5'),
+        Uri.parse(Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=$text&type=track&market=US&limit=10&offset=5')),
         headers: {
           'Content-type': 'application/json',
           'Authorization': 'Bearer $accessToken'

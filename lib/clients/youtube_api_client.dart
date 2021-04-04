@@ -23,7 +23,7 @@ class YouTubeApiClient extends ApiClient {
     //TODO: use authorization header for key
     //part=snippet gives more info to parse and verify, id just gives
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/search?part=snippet&q=$query&key=$key';
-    final uriEncoded = Uri.encodeFull(uri);
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: check if hits is empty in api client before passing this over
     final List<dynamic> videoResult = sourceType.resultsFromResponse(response, false, maxResults);
@@ -38,7 +38,7 @@ class YouTubeApiClient extends ApiClient {
 
   Future<Map<String,dynamic>> getVideoStats(String videoId, String key) async {
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/videos?part=statistics&id=$videoId&key=$key';
-    final uriEncoded = Uri.encodeFull(uri);
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: handle no results here. is that necessary?
     return response['items'][0];
@@ -48,7 +48,7 @@ class YouTubeApiClient extends ApiClient {
   Future<List<CommentInfo>> getSongComments(String id) async {
     final String key = await apiKey;
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/commentThreads?part=snippet&videoId=$id&maxResults=100&order=relevance&key=$key';
-    final uriEncoded = Uri.encodeFull(uri);
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     final List<dynamic> commentResult = sourceType.resultsFromResponse(response, true);
     Map<String, dynamic> map = Map();
