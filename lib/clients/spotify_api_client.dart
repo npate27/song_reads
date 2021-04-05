@@ -16,17 +16,18 @@ class SpotifyApiClient {
 
   SpotifyApiClient({@required this.httpClient,}) : assert(httpClient != null);
 
-  Future<String> getAccessTokenWithAuth(TokenStore tokenStore) async {
-    if (isTokenExpired(tokenStore, LiteralConstants.spotifyAccessTokenExpiryKey)) {
+  Future<String> getAccessTokenWithAuth() async {
+    if (isTokenExpired(LiteralConstants.spotifyAccessTokenExpiryKey)) {
         return refreshAccessToken(LiteralConstants.spotifyClientKey, authConfig, userListeningScopes);
     }
     else {
-      return tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey);
+      return TokenStore.instance.getValue(LiteralConstants.spotifyAccessTokenKey);
     }
   }
 
-  Future<String> getAccessTokenWithoutAuth(TokenStore tokenStore) async {
-    if (isTokenExpired(tokenStore, LiteralConstants.spotifyAccessTokenExpiryKey)) {
+  Future<String> getAccessTokenWithoutAuth() async {
+    TokenStore tokenStore = TokenStore.instance;
+    if (isTokenExpired(LiteralConstants.spotifyAccessTokenExpiryKey)) {
       final authToken = await base64EncodedToken(LiteralConstants.spotifyClientKey, LiteralConstants.spotifySecretKey);
       final response = parseResponse(await httpClient.post(
           Uri.parse(Uri.encodeFull(LiteralConstants.spotifyAuthTokenUrl)),
@@ -46,14 +47,12 @@ class SpotifyApiClient {
   }
 
   Future<String> getAccessToken() async {
-    TokenStore tokenStore = await TokenStore.instance;
-    return isUserLoggedIn(tokenStore) ? getAccessTokenWithAuth(tokenStore) : getAccessTokenWithoutAuth(tokenStore);
+    return isUserLoggedIn() ? getAccessTokenWithAuth() : getAccessTokenWithoutAuth();
   }
 
   Future<List<Object>> getCurrentlyPlayingSong() async{
-    TokenStore tokenStore = await TokenStore.instance;
-    if (isUserLoggedIn(tokenStore)) {
-      final accessToken = await getAccessTokenWithAuth(tokenStore);
+    if (isUserLoggedIn()) {
+      final accessToken = await getAccessTokenWithAuth();
       final response = parseResponse(await httpClient.get(
           Uri.parse(Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/me/player/currently-playing?market=US')),
           headers: {

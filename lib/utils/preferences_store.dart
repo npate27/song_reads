@@ -5,15 +5,15 @@ import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/constants/literals.dart';
 
 
-class Preferences {
-  static const _preferencesBox = '_preferencesBox';
+class PreferencesStore {
+  static const preferencesBoxKey = 'preferences_box_key';
   final Box<dynamic> _box;
 
-  Preferences._(this._box);
+  PreferencesStore._(this._box);
 
-  static Future<Preferences> get instance async {
-    final box = await Hive.openBox<dynamic>(_preferencesBox);
-    return Preferences._(box);
+  static PreferencesStore get instance {
+    final Box<dynamic> box = Hive.box(preferencesBoxKey);
+    return PreferencesStore._(box);
   }
 
   int maxResultsPref() => _getValue(maxResultsPreferenceKey) ?? maxResultsDefault;

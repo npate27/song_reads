@@ -39,8 +39,7 @@ class SongBloc extends Bloc<SongEvent, SongState> {
       yield SongLoaded(songInfo: event.songInfo, delayNextQueryMs: null);
     }
     else if (event is SongLoginCheck) {
-      TokenStore tokenStore = await TokenStore.instance;
-      bool isLoggedIn = isUserLoggedIn(tokenStore);
+      bool isLoggedIn = isUserLoggedIn();
       yield(SongDiscovery(isLoggedIn: isLoggedIn));
     }
   }

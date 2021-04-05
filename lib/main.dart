@@ -12,6 +12,8 @@ import 'package:song_reads/router.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:flutter/rendering.dart';
+import 'package:song_reads/utils/preferences_store.dart';
+import 'package:song_reads/utils/token_store.dart';
 
 /// Custom [BlocObserver] which observes all bloc and cubit instances.
 class SimpleBlocObserver extends BlocObserver {
@@ -65,6 +67,8 @@ class SongReads extends StatelessWidget {
 void main() async {
   Bloc.observer = SimpleBlocObserver();
   await Hive.initFlutter();
+  await Hive.openBox(TokenStore.tokenBoxKey);
+  await Hive.openBox(PreferencesStore.preferencesBoxKey);
   runApp(SongReads());
   debugPaintSizeEnabled = false;
 }

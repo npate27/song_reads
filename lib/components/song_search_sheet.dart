@@ -85,7 +85,6 @@ SearchBar _searchBar(BuildContext context, SearchBarController searchBarControll
 
 Future<List<SongInfo>> _getSpotifyResults(String text) async {
   SpotifyRepository repository = SpotifyRepository(apiClient: SpotifyApiClient(httpClient: AppHttpClient().client));
-  TokenStore tokenStore = await TokenStore.instance;
-  List<SongInfo> searchResults =  await repository.getSongSearchResults(text, tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey));
+  List<SongInfo> searchResults =  await repository.getSongSearchResults(text, TokenStore.instance.getValue(LiteralConstants.spotifyAccessTokenKey));
   return searchResults;
 }
