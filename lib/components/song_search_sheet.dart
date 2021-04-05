@@ -7,6 +7,9 @@ import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/clients/http_client_singleton.dart';
 import 'package:song_reads/models/song_info.dart';
 import 'package:song_reads/repositories/spotify_repository.dart';
+import 'package:song_reads/utils/token_store.dart';
+import 'package:song_reads/constants/literals.dart' as LiteralConstants;
+
 
 class SongSearchSheet extends StatefulWidget {
   @override
@@ -82,6 +85,7 @@ SearchBar _searchBar(BuildContext context, SearchBarController searchBarControll
 
 Future<List<SongInfo>> _getSpotifyResults(String text) async {
   SpotifyRepository repository = SpotifyRepository(apiClient: SpotifyApiClient(httpClient: AppHttpClient().client));
-  List<SongInfo> searchResults =  await repository.getSongSearchResults(text);
+  TokenStore tokenStore = await TokenStore.instance;
+  List<SongInfo> searchResults =  await repository.getSongSearchResults(text, tokenStore.getValue(LiteralConstants.spotifyAccessTokenKey));
   return searchResults;
 }

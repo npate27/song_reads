@@ -75,8 +75,10 @@ class SpotifyApiClient {
     }
   }
 
-  Future<List<SongInfo>> getSongSearchResults(String text) async {
-    final accessToken = await getAccessToken();
+  Future<List<SongInfo>> getSongSearchResults(String text, [String accessToken]) async {
+    if(accessToken == null) {
+      accessToken = await getAccessToken();
+    }
     final response = parseResponse(await httpClient.get(
         Uri.parse(Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=$text&type=track&market=US&limit=10&offset=5')),
         headers: {
