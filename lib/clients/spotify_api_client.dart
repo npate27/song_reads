@@ -61,7 +61,7 @@ class SpotifyApiClient {
             'Authorization': 'Bearer $accessToken'
           }
       ));
-      if (response != null) {
+      if (response != null && response['item'] != null) {
         SongInfo songInfo = SongInfo.fromJson(response['item']);
         final int currentSongProgressMs = response['progress_ms'];
         final int songDurationMs = response['item']['duration_ms'];
