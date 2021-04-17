@@ -39,7 +39,11 @@ List<Widget> sourceContentWidgets(dynamic sourceData) {
       likes = NumberFormat.compact().format(source.likes);
       break;
     case CommentSource.genius:
-        //TODO: Handle this case where not all fields are non-null
+      //TODO: Handle this case where not all fields are non-null
+      title = source.title;
+      uploadDetails = 'Genius';
+      commentsCount = NumberFormat.compact().format(source.numComments);
+      likes = NumberFormat.compact().format(source.likes);
       break;
   }
 

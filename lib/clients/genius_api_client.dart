@@ -19,7 +19,8 @@ class GeniusApiClient extends ApiClient{
   @override
   Future<List<GeniusSong>> searchSong(String title, String artist, [int maxResults]) async {
     final String key = await apiKey;
-    final String query = '$title $artist';
+    //TODO figure out how Genius Search works, removing braces helps with specific songs.
+    final String query = '$title $artist'.replaceAll(RegExp(r'\(.*\)'), '');
     //TODO: use authorization header for key
     final String uri = '${LiteralConstants.baseGeniusApiUrl}/search?q=$query&access_token=$key';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
@@ -27,13 +28,29 @@ class GeniusApiClient extends ApiClient{
     //TODO: currently assumes top result is the desired one, needs more validation, like title validation
     //TODO: check if hits is empty in api client before passing this over
     final Map<String,dynamic> topSongResult = sourceType.resultsFromResponse(response, false)[0]['result'];
+    final int commentCount = await getCommentsCount(topSongResult['id']);
+    topSongResult['comments_count'] = commentCount;
     return [GeniusSong.fromJson(topSongResult)];
   }
 
   @override
-  Future<List<CommentInfo>> getSongComments(String id) {
-    // TODO: implement getSongComments
-    throw UnimplementedError();
+  Future<List<CommentInfo>> getSongComments(String id) async {
+    final String uri = '${LiteralConstants.commentsGeniusApiUrl}/songs/$id/comments?page=1&text_format=html';
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
+    final response = parseResponse(await httpClient.get(uriEncoded));
+    final List<dynamic> commentResult = sourceType.resultsFromResponse(response, true);
+    Map<String, dynamic> map = Map();
+    map['commentResult'] = commentResult;
+    map['sourceType'] = sourceType;
+    return compute(parseJsonToCommentList, map);
+  }
+
+  Future<int> getCommentsCount(int id) async {
+    final String uri = '${LiteralConstants.commentsGeniusApiUrl}/songs/$id/comments?page=1&text_format=html';
+    final uriEncoded = Uri.parse(Uri.encodeFull(uri));
+    final response = parseResponse(await httpClient.get(uriEncoded));
+    return response['response']['total_count'];
+
   }
 }
 

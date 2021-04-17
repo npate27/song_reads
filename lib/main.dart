@@ -45,7 +45,10 @@ class SongReads extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<SearchSourceBloc>(
-          create: (BuildContext context) => SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client))),
+          create: (BuildContext context) => SearchSourceBloc(
+              ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)),
+              redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client)),
+              geniusRepository: GeniusRepository(apiClient: GeniusApiClient(httpClient: AppHttpClient().client))),
         ),
         BlocProvider<SongBloc>(
           create: (BuildContext context) => SongBloc(spotifyRepository: SpotifyRepository(apiClient: SpotifyApiClient(httpClient: AppHttpClient().client)))

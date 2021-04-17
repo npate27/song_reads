@@ -15,7 +15,13 @@ class CommentInfo {
     CommentInfo info;
     switch (commentSource) {
       case CommentSource.genius:
-        // TODO: Handle this case.
+        info = CommentInfo(
+          id: json['id'].toString(),
+          likes: json['votes_total'],
+          user: json['author']['name'],
+          text: json['body']['html'],
+          commentSource: commentSource,
+        );
         break;
       case CommentSource.youtube:
         info = CommentInfo(

@@ -19,7 +19,11 @@ class CommentsPage extends StatefulWidget {
 }
 
 class _CommentsPageState extends State<CommentsPage> {
-  SearchSourceBloc bloc = SearchSourceBloc(ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)), redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client)));
+  SearchSourceBloc bloc = SearchSourceBloc(
+      ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)),
+      redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client)),
+      geniusRepository: GeniusRepository(apiClient: GeniusApiClient(httpClient: AppHttpClient().client))
+  );
 
   @override
   Widget build(BuildContext context) {

@@ -21,8 +21,8 @@ List<CommentInfo> parseJsonToCommentList(Map<String,dynamic> map) {
   CommentSource sourceType = map['sourceType'];
   switch(sourceType) {
     case CommentSource.genius:
-    // TODO: Handle this case.
-    break;
+      return commentResult.map((result) => CommentInfo.fromJson(result, sourceType)).toList();
+      break;
     case CommentSource.youtube:
       return commentResult.map((result) => CommentInfo.fromJson(result, sourceType)).toList();
       break;

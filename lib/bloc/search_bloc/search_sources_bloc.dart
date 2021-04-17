@@ -12,9 +12,9 @@ import 'package:song_reads/utils/preferences_store.dart';
 class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
   final YouTubeRepository ytRepository;
   final RedditRepository redditRepository;
-  // final GeniusRepository geniusRepository;
+  final GeniusRepository geniusRepository;
 
-  SearchSourceBloc({@required this.ytRepository, @required this.redditRepository}) : assert(ytRepository != null && redditRepository != null), super(SearchEmpty());
+  SearchSourceBloc({@required this.ytRepository, @required this.redditRepository, @required this.geniusRepository}) : assert(ytRepository != null && redditRepository != null && geniusRepository != null), super(SearchEmpty());
 
 
   @override
@@ -23,12 +23,14 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
       yield SearchLoading();
       try {
         //TODO: Make these lists of top N results to be merged into one list (random order? allow filtering?)
-        PreferencesStore preferences = await PreferencesStore.instance;
+        PreferencesStore preferences = PreferencesStore.instance;
         final int maxResults = preferences.maxResultsPref();
         SongInfo songInfo = event.songInfo;
         final List<Source> ytVideos = await ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
         final List<Source> redditThreads = await redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        List<Source> results = [...ytVideos, ...redditThreads];
+        //TODO: currently assumes top result is the desired one, needs more validation, like title validation
+        final List<Source> geniusResult = await geniusRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        List<Source> results = [...geniusResult, ...ytVideos, ...redditThreads,];
         yield SearchSourceLoaded(results: results);
       } catch (_) { // TODO: More explicit exception
         yield SearchError();
@@ -46,7 +48,7 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
             results = await redditRepository.getSongComments(event.id);
             break;
           case CommentSource.genius:
-          // TODO: Handle this case.
+            results = await geniusRepository.getSongComments(event.id);
             break;
         }
         yield SearchCommentsLoaded(results: results);
