@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:html_unescape/html_unescape_small.dart';
 
 class SongInfo extends Equatable{
   final String title;
@@ -10,10 +11,11 @@ class SongInfo extends Equatable{
 
   //TODO: parse better for multiple artists
   factory SongInfo.fromJson(Map<String, dynamic> json) {
+    final HtmlUnescape unescape = HtmlUnescape();
     return SongInfo(
-        title: json['name'],
-        artist: json['artists'][0]['name'],
-        album: json['album']['name'],
+        title: unescape.convert(json['name']),
+        artist: unescape.convert(json['artists'][0]['name']),
+        album: unescape.convert(json['album']['name']),
         artworkImage: json['album']['images'][0]['url']
     );
   }

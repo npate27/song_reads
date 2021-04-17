@@ -1,5 +1,6 @@
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/models/source_model.dart';
+import 'package:html_unescape/html_unescape_small.dart';
 
 class YouTubeVideo extends Source {
   final String id;
@@ -13,11 +14,12 @@ class YouTubeVideo extends Source {
 
   factory YouTubeVideo.fromJson(Map<String, dynamic> json) {
     // final int dislikes = int.parse(json['statistics']['dislikeCount']);
+    final HtmlUnescape unescape = HtmlUnescape();
     return YouTubeVideo(
         id: json['id'],
         likes: int.parse(json['statistics']['likeCount']),
-        title: json['snippet']['title'],
-        channelTitle: json['snippet']['channelTitle'],
+        title: unescape.convert(json['snippet']['title']),
+        channelTitle: unescape.convert(json['snippet']['channelTitle']),
         numComments: int.parse(json['statistics']['commentCount']),
     );
   }
