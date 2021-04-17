@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/components/comment_source_result_card.dart';
+import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/components/now_playing_card.dart';
 import 'package:song_reads/components/section_header.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
@@ -107,7 +108,7 @@ BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
         }
         if (state is SearchLoading) {
           return Center(
-            child: CircularProgressIndicator()
+            child: CustomLoadingIndicator()
           );
         }
         if (state is SearchSourceLoaded) {

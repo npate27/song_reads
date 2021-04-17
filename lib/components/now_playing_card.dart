@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -60,7 +61,7 @@ class NowPlayingCard extends StatelessWidget {
                     );
                   }
                   //TODO: make this better
-                  return Align(alignment: Alignment.center, child: CircularProgressIndicator());
+                  return Align(alignment: Alignment.center, child: CustomLoadingIndicator());
                 }
             ),
             Align(
