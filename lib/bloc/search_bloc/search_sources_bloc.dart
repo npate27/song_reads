@@ -26,11 +26,12 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
         PreferencesStore preferences = PreferencesStore.instance;
         final int maxResults = preferences.maxResultsPref();
         SongInfo songInfo = event.songInfo;
-        final List<Source> ytVideos = await ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        final List<Source> redditThreads = await redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        final Future<List<YouTubeVideo>> ytVideos = ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        final Future<List<RedditThread>> redditThreads = redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
         //TODO: currently assumes top result is the desired one, needs more validation, like title validation
-        final List<Source> geniusResult = await geniusRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        List<Source> results = [...geniusResult, ...ytVideos, ...redditThreads,];
+        final Future<List<GeniusSong>> geniusResult = geniusRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        final List<List<Source>> allResults = await Future.wait([geniusResult, ytVideos, redditThreads]);
+        List<Source> results = allResults.expand((i) => i).toList();
         yield SearchSourceLoaded(results: results);
       } catch (_) { // TODO: More explicit exception
         yield SearchError();
