@@ -18,7 +18,7 @@ class CommentInfo {
         info = CommentInfo(
           id: json['id'].toString(),
           likes: json['votes_total'],
-          user: json['author']['name'],
+          user: (json['author'] != null) ? json['author']['name'] : 'Anonymous User',
           text: json['body']['html'],
           commentSource: commentSource,
         );
