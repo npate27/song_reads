@@ -22,7 +22,9 @@ class CommentInfoView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Html(data: commentInfo.text),
+                    //Ignoring iframes for now due to "The RenderParagraph class does not support dry layout."
+                    // issue on some Giphy related messages on genius
+                    Html(data: commentInfo.text, blacklistedElements: ['iframe']),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
