@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:song_reads/components/preferences_spotify_login_section.dart';
+import 'package:song_reads/clients/spotify_api_client.dart';
 import 'package:song_reads/constants/enums.dart';
+import 'package:song_reads/utils/auth_utils.dart';
 import 'package:song_reads/utils/preferences_store.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
@@ -13,12 +15,28 @@ class PreferencesPage extends StatefulWidget {
 }
 
 class _PreferencesPageState extends State<PreferencesPage> {
+  bool userLoggedIn;
+
+  @override
+  void initState() {
+    userLoggedIn = isUserLoggedIn();
+    super.initState();
+  }
+
+  updateUserLoginState(bool loginStatus) {
+    if (mounted) {
+      setState(() {
+        userLoggedIn = loginStatus;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
+      body: SettingsList(
+        shrinkWrap: true,
+        sections: [
           SettingsSection(
             title: 'Results',
             tiles: [
@@ -35,10 +53,10 @@ class _PreferencesPageState extends State<PreferencesPage> {
             ],
           ),
           SettingsSection(
-            title: 'Sources',
-            subtitle: Text(
-                'Determines which sources to include in results'),
-            tiles: generateSourceSettingsToggles()
+              title: 'Sources',
+              subtitle: Text(
+                  'Determines which sources to include in results'),
+              tiles: generateSourceSettingsToggles()
           ),
           SettingsSection(
               title: 'Misc',
@@ -51,7 +69,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 )
               ]
           ),
-          SpotifyLoginPreferenceSection()
+          SettingsSection(
+              title: 'Manage Spotify Login',
+              tiles: [
+                getSpotifyTile()
+              ]
+          ),
         ],
       ),
     );
@@ -68,13 +91,55 @@ class _PreferencesPageState extends State<PreferencesPage> {
         switchValue: switchValue,
         onToggle: (bool value) {
           preferences.setSourcePref(source, value);
-          //TODO: Make a separate widget, this renders the entire pref page, should isolate to own widget
           // without this, the toggle doesn't immediately update
           setState(() {});
         },
       ));
     }
     return sourceToggles;
+  }
+  SettingsTile getSpotifyTile() {
+    if (userLoggedIn) {
+      return SettingsTile(
+        title: 'Log out of Spotify',
+        subtitle: 'Removes SongReads\' ability to automatically detect currently playing song on Spotify',
+        leading: Icon(Icons.login),
+        onPressed: (BuildContext context) async{
+          //TODO: process if failed for some reason
+          bool logOutSuccessful = logOutSpotify();
+          if (logOutSuccessful) {
+            updateUserLoginState(false);
+            Fluttertoast.showToast(
+                msg: 'Successfully logged out of Spotify',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1
+            );
+          }
+        },
+      );
+    }
+    else {
+      return SettingsTile(
+        title: 'Log in to Spotify',
+        subtitle: 'Lets the SongReads use your currently playing song to find comments',
+        leading: Icon(Icons.login),
+        onPressed: (BuildContext context) async{
+          //TODO: process if cancelled/failed
+          bool logInSuccessful = await logInSpotifyAuthPKCE(LiteralConstants.spotifyClientKey, LiteralConstants.redirectUrl, SpotifyApiClient.authConfig, SpotifyApiClient.userListeningScopes);
+          if (logInSuccessful) {
+            updateUserLoginState(true);
+            //TODO make this show the username
+            Fluttertoast.showToast(
+                msg: 'Successfully logged in Spotify as user',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1
+            );
+          }
+        },
+      );
+    }
   }
 }
 
