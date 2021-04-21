@@ -19,16 +19,22 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   @override
   void initState() {
-    userLoggedIn = isUserLoggedIn();
     super.initState();
+    userLoggedIn = isUserLoggedIn();
+  }
+
+
+  @override
+  void setState(VoidCallback fn) {
+    if(mounted) {
+      super.setState(fn);
+    }
   }
 
   updateUserLoginState(bool loginStatus) {
-    if (mounted) {
-      setState(() {
-        userLoggedIn = loginStatus;
-      });
-    }
+    setState(() {
+      userLoggedIn = loginStatus;
+    });
   }
 
   @override

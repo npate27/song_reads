@@ -13,8 +13,15 @@ class _CustomLoadingIndicatorState extends State<CustomLoadingIndicator> {
 
   @override
   void initState() {
-    _loadRiveFile();
     super.initState();
+    _loadRiveFile();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if(mounted) {
+      super.setState(fn);
+    }
   }
 
   // loads a Rive file
