@@ -79,7 +79,7 @@ class SpotifyApiClient {
       accessToken = await getAccessToken();
     }
     final response = parseResponse(await httpClient.get(
-        Uri.parse(Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=$text&type=track&market=US&limit=10&offset=5')),
+        Uri.parse(Uri.encodeFull('${LiteralConstants.baseSpotifyApiUrl}/search?q=${text.replaceAll(RegExp(' +'), '+')}&type=track&market=US&limit=10')),
         headers: {
           'Content-type': 'application/json',
           'Authorization': 'Bearer $accessToken'
