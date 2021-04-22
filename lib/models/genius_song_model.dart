@@ -14,8 +14,8 @@ class GeniusSong extends Source {
     return GeniusSong(
         id: json['id'].toString(),
         title: json['full_title'],
-        likes: json['pyongs_count'],
-        numComments: json['comments_count']
+        likes: json['pyongs_count'] ?? 0,
+        numComments: json['comments_count'] ?? 0
     );
   }
 }
