@@ -17,10 +17,10 @@ class YouTubeVideo extends Source {
     final HtmlUnescape unescape = HtmlUnescape();
     return YouTubeVideo(
         id: json['id'],
-        likes: int.parse(json['statistics']['likeCount']),
+        likes: int.parse(json['statistics']['likeCount']) ?? 0,
         title: unescape.convert(json['snippet']['title']),
         channelTitle: unescape.convert(json['snippet']['channelTitle']),
-        numComments: int.parse(json['statistics']['commentCount']),
+        numComments: json['statistics'].containsKey('commentCount') ? int.parse(json['statistics']['commentCount']) : 0,
     );
   }
 }
