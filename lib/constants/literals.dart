@@ -8,8 +8,9 @@ const String atGeniusString = '@ Genius';
 const String nowPlayingCardHeader = 'Now Playing';
 
 // ===== API =====
-const String baseGeniusApiUrl = 'https://api.genius.com';
-const String commentsGeniusApiUrl = 'https://genius.com/api'; //Cant get comments via baseGeniusApiUrl
+//Better searches vs using api.genius.com
+//Cant get comments via baseGeniusApiUrl
+const String baseGeniusApiUrl = 'https://genius.com/api';
 const String baseYoutubeApiUrl = 'https://youtube.googleapis.com/youtube/v3';
 const String baseRedditApiUrl = 'https://reddit.com';
 const String baseSpotifyApiUrl = 'https://api.spotify.com/v1';

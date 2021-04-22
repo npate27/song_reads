@@ -9,20 +9,15 @@ import 'package:song_reads/utils/secrets_utils.dart';
 
 class GeniusApiClient extends ApiClient{
   final http.Client httpClient;
-  Future<String> apiKey;
   static const CommentSource sourceType = CommentSource.genius;
 
-  GeniusApiClient({@required this.httpClient,}) : assert(httpClient != null) {
-    apiKey = loadSecretFromKey('genius_api_key');
-  }
+  GeniusApiClient({@required this.httpClient,}) : assert(httpClient != null);
 
   @override
   Future<List<GeniusSong>> searchSong(String title, String artist, [int maxResults]) async {
-    final String key = await apiKey;
-    //TODO figure out how Genius Search works, removing braces helps with specific songs.
-    final String query = '$title $artist'.replaceAll(RegExp(r'\(.*\)'), '');
+    final String query = '$title $artist'.replaceAll(RegExp(' +'), '+');
     //TODO: use authorization header for key
-    final String uri = '${LiteralConstants.baseGeniusApiUrl}/search?q=$query&access_token=$key';
+    final String uri = '${LiteralConstants.baseGeniusApiUrl}/search/multi?q=$query';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: currently assumes top result is the desired one, needs more validation, like title validation
@@ -35,7 +30,7 @@ class GeniusApiClient extends ApiClient{
 
   @override
   Future<List<CommentInfo>> getSongComments(String id) async {
-    final String uri = '${LiteralConstants.commentsGeniusApiUrl}/songs/$id/comments?page=1&text_format=html';
+    final String uri = '${LiteralConstants.baseGeniusApiUrl}/songs/$id/comments?page=1&text_format=html';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     final List<dynamic> commentResult = sourceType.resultsFromResponse(response, true);
@@ -46,7 +41,7 @@ class GeniusApiClient extends ApiClient{
   }
 
   Future<int> getCommentsCount(int id) async {
-    final String uri = '${LiteralConstants.commentsGeniusApiUrl}/songs/$id/comments?page=1&text_format=html';
+    final String uri = '${LiteralConstants.baseGeniusApiUrl}/songs/$id/comments?page=1&text_format=html';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     return response['response']['total_count'];

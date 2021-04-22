@@ -55,7 +55,7 @@ extension CommentSourceResultsDataPath on CommentSource {
   List<dynamic> resultsFromResponse(Map<String, dynamic> resultJson, bool isForComments, [int maxResults]) {
     switch (this) {
       case CommentSource.genius:
-        return isForComments ? resultJson['response']['comments'] : resultJson['response']['hits'];
+        return isForComments ? resultJson['response']['comments'] : resultJson['response']['sections'].singleWhere((section) => section['type'] == 'song')['hits'];
       case CommentSource.youtube:
         return isForComments ?  resultJson['items'] : resultJson['items'].take(maxResults).toList();
       case CommentSource.reddit:
