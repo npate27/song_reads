@@ -16,7 +16,6 @@ class GeniusApiClient extends ApiClient{
   @override
   Future<List<GeniusSong>> searchSong(String title, String artist, [int maxResults]) async {
     final String query = '$title $artist'.replaceAll(RegExp(' +'), '+');
-    //TODO: use authorization header for key
     final String uri = '${LiteralConstants.baseGeniusApiUrl}/search/multi?q=$query';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
