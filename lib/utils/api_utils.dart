@@ -22,12 +22,13 @@ List<CommentInfo> parseJsonToCommentList(Map<String,dynamic> map) {
   switch(sourceType) {
     case CommentSource.genius:
       return commentResult.map((result) => CommentInfo.fromJson(result, sourceType)).toList();
-      break;
     case CommentSource.youtube:
       return commentResult.map((result) => CommentInfo.fromJson(result, sourceType)).toList();
-      break;
     case CommentSource.reddit:
-      return commentResult.map((result) => CommentInfo.fromJson(result['data'], sourceType)).toList();
-      break;
+      //Last element is a "more" object, not an actual comment, ingore it.
+      //TODO: make this just ignore the very last element instead?
+      List<CommentInfo> redditComments = commentResult.map((result) => result['kind'] == 't1' ? CommentInfo.fromJson(result['data'], sourceType) : null).toList();
+      redditComments.removeWhere((result) => result == null);
+      return redditComments;
   }
 }
