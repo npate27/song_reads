@@ -14,16 +14,16 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouteConstants.mainRoute:
-        return MaterialPageRoute(builder: (_) => MainPage());
+        return MaterialPageRoute(builder: (_) => MainPage(), settings: settings);
       case RouteConstants.commentsRoute:
         return MaterialPageRoute(builder: (BuildContext context) {
           final Source sourceData = settings.arguments;
           return CommentsPage(sourceData: sourceData);
-        });
+        }, settings: settings);
       case RouteConstants.preferencesRoute:
-        return MaterialPageRoute(builder: (_) => PreferencesPage());
+        return MaterialPageRoute(builder: (_) => PreferencesPage(), settings: settings);
       default:
-        return MaterialPageRoute(builder: (_) => MainPage());
+        return MaterialPageRoute(builder: (_) => MainPage(), settings: settings);
     }
   }
 }
