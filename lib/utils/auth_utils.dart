@@ -1,18 +1,46 @@
 import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:song_reads/clients/spotify_api_client.dart';
 import 'package:song_reads/utils/secrets_utils.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/utils/token_store.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:html' as html;
+import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
 
 Future<bool> logInSpotifyAuthPKCE(String clientKey, String redirectUrl, AuthorizationServiceConfiguration authServiceConfig, List<String> scopes) async{
   String clientString = await loadSecretFromKey(clientKey);
-  FlutterAppAuth appAuth = FlutterAppAuth();
-  var authRequest = AuthorizationRequest(clientString, redirectUrl, serviceConfiguration: authServiceConfig, scopes: scopes);
-  final AuthorizationResponse result = await appAuth.authorize(authRequest);
-  if (result != null) {
-    return getAuthRefreshToken(clientString, authServiceConfig, scopes, result.authorizationCode, result.codeVerifier);
+  if(kIsWeb) {
+    //Taken from https://github.com/dart-lang/oauth2/blob/master/lib/src/authorization_code_grant.dart
+    String _charset =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+    String codeVerifier = List.generate(128, (i) => _charset[Random.secure().nextInt(_charset.length)]).join();
+    String codeChallenge = base64Url.encode(sha256.convert(ascii.encode(codeVerifier)).bytes).replaceAll('=', '');
+
+    final url = Uri.https('accounts.spotify.com', '/authorize', {
+      'response_type': 'code',
+      'client_id': clientString,
+      'redirect_uri': LiteralConstants.webRedirectUrl,
+      'scope': SpotifyApiClient.userListeningScopes.join(' '),
+      'code_challenge_method': 'S256',
+      'code_challenge': codeChallenge
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      html.window.location.assign(url.toString());
+    });
+  } else {
+    FlutterAppAuth appAuth = FlutterAppAuth();
+    var authRequest = AuthorizationRequest(
+        clientString, redirectUrl, serviceConfiguration: authServiceConfig, scopes: scopes);
+    final AuthorizationResponse result = await appAuth.authorize(authRequest);
+    if (result != null) {
+      return getAuthRefreshToken(clientString, authServiceConfig, scopes, result.authorizationCode, result.codeVerifier);
+    }
+    return false;
   }
-  return false;
 }
 
 bool logOutSpotify() {
@@ -25,18 +53,22 @@ bool logOutSpotify() {
 
 //TODO: Make codeVerifier and authCode null and make it refresh token instead
 Future<bool> getAuthRefreshToken(String clientString, AuthorizationServiceConfiguration authServiceConfig, List<String> scopes, String authCode, String codeVerifier) async{
-  FlutterAppAuth appAuth = FlutterAppAuth();
-  final TokenResponse result = await appAuth.token(
-      TokenRequest(clientString, LiteralConstants.redirectUrl, serviceConfiguration: authServiceConfig, scopes: scopes, authorizationCode: authCode, codeVerifier: codeVerifier)
-  );
-  if (result != null) {
-    TokenStore tokenStore = TokenStore.instance;
-    tokenStore.setValue(LiteralConstants.spotifyRefreshTokenKey, result.refreshToken);
-    tokenStore.setValue(LiteralConstants.spotifyAccessTokenKey, result.accessToken);
-    tokenStore.setValue(LiteralConstants.spotifyAccessTokenExpiryKey, result.accessTokenExpirationDateTime.toUtc().millisecondsSinceEpoch);
-    return true;
+  if(kIsWeb) {
+
+  } else {
+    FlutterAppAuth appAuth = FlutterAppAuth();
+    final TokenResponse result = await appAuth.token(
+        TokenRequest(clientString, LiteralConstants.redirectUrl, serviceConfiguration: authServiceConfig, scopes: scopes, authorizationCode: authCode, codeVerifier: codeVerifier)
+    );
+    if (result != null) {
+      TokenStore tokenStore = TokenStore.instance;
+      tokenStore.setValue(LiteralConstants.spotifyRefreshTokenKey, result.refreshToken);
+      tokenStore.setValue(LiteralConstants.spotifyAccessTokenKey, result.accessToken);
+      tokenStore.setValue(LiteralConstants.spotifyAccessTokenExpiryKey, result.accessTokenExpirationDateTime.toUtc().millisecondsSinceEpoch);
+      return true;
+    }
+    return false;
   }
-  return false;
 }
 
 Future<String> refreshAccessToken(String clientKey, AuthorizationServiceConfiguration authServiceConfig, List<String> scopes) async{

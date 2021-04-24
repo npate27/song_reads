@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -8,7 +9,9 @@ import 'package:song_reads/utils/preferences_store.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
 class PreferencesPage extends StatefulWidget {
-  PreferencesPage({Key key}) : super(key: key);
+  final String authCode;
+
+  PreferencesPage({Key key, this.authCode}) : super(key: key);
 
   @override
   _PreferencesPageState createState() => _PreferencesPageState();
@@ -20,7 +23,11 @@ class _PreferencesPageState extends State<PreferencesPage> {
   @override
   void initState() {
     super.initState();
-    userLoggedIn = isUserLoggedIn();
+    if(kIsWeb) {
+      userLoggedIn = widget.authCode?.isNotEmpty ?? false;
+    } else {
+      userLoggedIn = isUserLoggedIn();
+    }
   }
 
 
