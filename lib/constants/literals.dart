@@ -17,6 +17,7 @@ const String baseSpotifyApiUrl = 'https://api.spotify.com/v1';
 const String spotifyAuthTokenUrl = 'https://accounts.spotify.com/api/token/';
 const String spotifyAuthUrl = 'https://accounts.spotify.com/authorize/';
 const String redirectUrl = 'songreads:/';
+const String webRedirectUrl = 'http://localhost:59889/preferences/callback';
 
 // ===== Preferences =====
 //Besides maxResults, sources are all just the toString'd version of the CommentSource enums
