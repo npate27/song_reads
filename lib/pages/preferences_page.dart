@@ -25,7 +25,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   void initState() {
     super.initState();
     if(kIsWeb) {
-      userLoggedIn = widget.authCode?.isNotEmpty ?? false;
+      userLoggedIn = widget.authCode?.isNotEmpty ?? isUserLoggedIn();
       if (userLoggedIn) {
         //TODO make this show the username
         Fluttertoast.showToast(
