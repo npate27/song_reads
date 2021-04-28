@@ -7,6 +7,7 @@ import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/utils/auth_utils.dart';
 import 'package:song_reads/utils/preferences_store.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
+import 'package:song_reads/constants/routes.dart' as RouterConstants;
 
 class PreferencesPage extends StatefulWidget {
   final String authCode;
@@ -25,11 +26,19 @@ class _PreferencesPageState extends State<PreferencesPage> {
     super.initState();
     if(kIsWeb) {
       userLoggedIn = widget.authCode?.isNotEmpty ?? false;
+      if (userLoggedIn) {
+        //TODO make this show the username
+        Fluttertoast.showToast(
+            msg: 'Successfully logged in Spotify as user',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1
+        );
+      }
     } else {
       userLoggedIn = isUserLoggedIn();
     }
   }
-
 
   @override
   void setState(VoidCallback fn) {
@@ -137,18 +146,23 @@ class _PreferencesPageState extends State<PreferencesPage> {
         title: 'Log in to Spotify',
         subtitle: 'Lets the SongReads use your currently playing song to find comments',
         leading: Icon(Icons.login),
-        onPressed: (BuildContext context) async{
+        onPressed: (BuildContext context) async {
           //TODO: process if cancelled/failed
-          bool logInSuccessful = await logInSpotifyAuthPKCE(LiteralConstants.spotifyClientKey, LiteralConstants.redirectUrl, SpotifyApiClient.authConfig, SpotifyApiClient.userListeningScopes);
-          if (logInSuccessful) {
-            updateUserLoginState(true);
-            //TODO make this show the username
-            Fluttertoast.showToast(
-                msg: 'Successfully logged in Spotify as user',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1
-            );
+          bool logInSuccessful;
+          if (kIsWeb) {
+            logInSpotifyAuthPKCE(LiteralConstants.spotifyClientKey, LiteralConstants.redirectUrl, SpotifyApiClient.authConfig, SpotifyApiClient.userListeningScopes);
+          } else {
+            logInSuccessful = await logInSpotifyAuthPKCE(LiteralConstants.spotifyClientKey, LiteralConstants.redirectUrl, SpotifyApiClient.authConfig, SpotifyApiClient.userListeningScopes);
+            if (logInSuccessful) {
+              updateUserLoginState(true);
+              //TODO make this show the username
+              Fluttertoast.showToast(
+                  msg: 'Successfully logged in Spotify as user',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1
+              );
+            }
           }
         },
       );

@@ -5,6 +5,7 @@ import 'package:song_reads/pages/comments_page.dart';
 import 'package:song_reads/pages/main_page.dart';
 import 'package:song_reads/pages/preferences_page.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
+import 'package:song_reads/utils/auth_utils.dart';
 import 'models/source_model.dart';
 
 /* Reference
@@ -16,6 +17,7 @@ class Router {
     if(kIsWeb && settings.name.contains("callback")) {
       String code = Uri.base.toString().substring(Uri.base.toString().indexOf('code=') + 5);
       RouteSettings updatedRouteSettings = settings.copyWith(name: RouterConstants.preferencesRoute);
+      getAuthRefreshToken(null, null, null, code, null);
       return MaterialPageRoute(builder: (_) => PreferencesPage(authCode: code), settings: updatedRouteSettings);
     }
     switch (settings.name) {
