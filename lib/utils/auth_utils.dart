@@ -111,6 +111,7 @@ Future<String> refreshAccessToken(String clientKey, AuthorizationServiceConfigur
         body: {
           'grant_type': 'refresh_token',
           'refresh_token': refreshToken,
+          'client_id': clientString
         },
         encoding: Encoding.getByName('utf-8')
     ));
