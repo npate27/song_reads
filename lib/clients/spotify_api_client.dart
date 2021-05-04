@@ -13,15 +13,16 @@ class SpotifyApiClient {
   final http.Client httpClient;
   static final AuthorizationServiceConfiguration authConfig = AuthorizationServiceConfiguration(LiteralConstants.spotifyAuthUrl, LiteralConstants.spotifyAuthTokenUrl);
   static final List<String> userListeningScopes = ['user-read-recently-played','user-read-currently-playing'];
+  static final List<String> userInfoScopes = ['user-read-private','user-read-email'];
 
   SpotifyApiClient({@required this.httpClient,}) : assert(httpClient != null);
 
   Future<String> getAccessTokenWithAuth() async {
     if (isTokenExpired(LiteralConstants.spotifyAccessTokenExpiryKey)) {
-        return refreshAccessToken(LiteralConstants.spotifyClientKey, authConfig, userListeningScopes);
+      return refreshAccessToken(LiteralConstants.spotifyClientKey, authConfig, userListeningScopes);
     }
     else {
-      return TokenStore.instance.getValue(LiteralConstants.spotifyAccessTokenKey);
+    return TokenStore.instance.getValue(LiteralConstants.spotifyAccessTokenKey);
     }
   }
 
