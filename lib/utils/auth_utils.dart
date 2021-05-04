@@ -32,6 +32,7 @@ Future<bool> logInSpotifyAuthPKCE(String clientKey, String redirectUrl, Authoriz
       'code_challenge_method': 'S256',
       'code_challenge': codeChallenge
     });
+    //TODO Do this correctly like https://itnext.io/flutter-web-oauth-authentication-through-external-window-d890a7ff6463
     WidgetsBinding.instance.addPostFrameCallback((_) {
       html.window.location.replace(url.toString());
     });
