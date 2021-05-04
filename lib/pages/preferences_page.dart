@@ -8,6 +8,7 @@ import 'package:song_reads/utils/auth_utils.dart';
 import 'package:song_reads/utils/preferences_store.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
+import 'package:song_reads/utils/token_store.dart';
 
 class PreferencesPage extends StatefulWidget {
   final String authCode;
@@ -20,6 +21,7 @@ class PreferencesPage extends StatefulWidget {
 
 class _PreferencesPageState extends State<PreferencesPage> {
   bool userLoggedIn;
+  String userDisplayName;
 
   @override
   void initState() {
@@ -27,7 +29,6 @@ class _PreferencesPageState extends State<PreferencesPage> {
     if(kIsWeb) {
       userLoggedIn = widget.authCode?.isNotEmpty ?? isUserLoggedIn();
       if (userLoggedIn) {
-        //TODO make this show the username
         Fluttertoast.showToast(
             msg: 'Successfully logged in Spotify as user',
             toastLength: Toast.LENGTH_SHORT,
@@ -37,6 +38,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
       }
     } else {
       userLoggedIn = isUserLoggedIn();
+    }
+    if(userLoggedIn) {
+      userDisplayName = TokenStore.instance.getValue(LiteralConstants.spotifyUserDisplayNameKey);
+      if (userDisplayName == null) {
+        updateUserDisplayName();
+      }
     }
   }
 
@@ -51,6 +58,16 @@ class _PreferencesPageState extends State<PreferencesPage> {
     setState(() {
       userLoggedIn = loginStatus;
     });
+  }
+
+  updateUserDisplayName() async {
+    String displayName = await getSpotifyUserDisplayName();
+    if(displayName != null) {
+      TokenStore.instance.setValue(LiteralConstants.spotifyUserDisplayNameKey, displayName);
+      setState(() {
+        userDisplayName = displayName;
+      });
+    }
   }
 
   @override
@@ -123,7 +140,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   SettingsTile getSpotifyTile() {
     if (userLoggedIn) {
       return SettingsTile(
-        title: 'Log out of Spotify',
+        title: 'Log out of Spotify (Logged in as $userDisplayName)',
         subtitle: 'Removes SongReads\' ability to automatically detect currently playing song on Spotify',
         leading: Icon(Icons.login),
         onPressed: (BuildContext context) async{
@@ -154,10 +171,11 @@ class _PreferencesPageState extends State<PreferencesPage> {
           } else {
             logInSuccessful = await logInSpotifyAuthPKCE(LiteralConstants.spotifyClientKey, LiteralConstants.redirectUrl, SpotifyApiClient.authConfig, SpotifyApiClient.userListeningScopes);
             if (logInSuccessful) {
+              userDisplayName = await getSpotifyUserDisplayName();
               updateUserLoginState(true);
               //TODO make this show the username
               Fluttertoast.showToast(
-                  msg: 'Successfully logged in Spotify as user',
+                  msg: 'Successfully logged in with Spotify',
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1

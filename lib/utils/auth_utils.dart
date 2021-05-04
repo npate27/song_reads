@@ -9,7 +9,8 @@ import 'package:song_reads/utils/secrets_utils.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/utils/token_store.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:html' as html;
+// ignore: avoid_web_libraries_in_flutter
+import "package:universal_html/html.dart" as html;
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 
@@ -157,7 +158,28 @@ bool isTokenExpired(String accessTokenKeyExpiry) {
   }
 }
 
-//TODO: dont store auth key, use refresh token instead
 bool isUserLoggedIn(){
   return TokenStore.instance.getValue(LiteralConstants.spotifyRefreshTokenKey) != null;
+}
+
+Future<String> getSpotifyUserDisplayName( ) async {
+  String accessToken;
+  if (isTokenExpired(LiteralConstants.spotifyAccessTokenExpiryKey)) {
+    accessToken = await refreshAccessToken(LiteralConstants.spotifyClientKey, SpotifyApiClient.authConfig, SpotifyApiClient.userInfoScopes);
+  }
+  else {
+    accessToken = TokenStore.instance.getValue(LiteralConstants.spotifyAccessTokenKey);
+  }
+
+  final result = parseResponse(await AppHttpClient().client.get(
+      Uri.parse(Uri.encodeFull(LiteralConstants.baseSpotifyApiUrl + '/me')),
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      }
+  ));
+  if (result != null) {
+    return result['display_name'];
+  }
+  return null;
 }
