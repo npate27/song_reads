@@ -15,6 +15,7 @@ class GeniusApiClient extends ApiClient{
 
   @override
   Future<List<GeniusSong>> searchSong(String title, String artist, [int maxResults]) async {
+    //TODO is this + substitution needed? %20 normal encoding should just work I think
     final String query = '$title $artist'.replaceAll(RegExp(' +'), '+');
     final String uri = '${LiteralConstants.baseGeniusApiUrl}/search/multi?q=$query';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
