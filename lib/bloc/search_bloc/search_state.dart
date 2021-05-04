@@ -16,12 +16,13 @@ class SearchEmpty extends SearchState {}
 class SearchLoading extends SearchState {}
 
 class SearchSourceLoaded extends SearchState {
-  final List<Source> results;
+  final List<Source> songResults;
+  final List<Source> albumResults;
 
-  const SearchSourceLoaded({this.results});
+  const SearchSourceLoaded({this.songResults, this.albumResults});
 
   @override
-  List<Object> get props => [results];
+  List<Object> get props => [songResults, albumResults];
 }
 
 class SearchCommentsLoaded extends SearchState {

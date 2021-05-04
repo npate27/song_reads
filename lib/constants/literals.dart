@@ -30,6 +30,7 @@ const String spotifyRefreshTokenKey = 'spotify_refresh_token_expiry';
 const String spotifyAuthCodeKey = 'spotify_auth_code_key';
 const String spotifyCodeVerifierKey = 'spotify_code_verifier_key';
 const String spotifyUserDisplayNameKey = 'spotify_user_display_name_key';
+const String currentAlbumKey = 'current_album_key';
 
 // ===== Secrets =====
 const String spotifyClientKey = 'spotify_client_id';

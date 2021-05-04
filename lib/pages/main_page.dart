@@ -79,10 +79,7 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
               songBlocBuilder(),
-              SectionHeader(sectionTitle: LiteralConstants.songCommentHeader, headerIndex: 0, collapseHeaderCallBack: collapseHeaderCallBack,),
-              Visibility(visible: isSectionExpanded[0], child: Container(child: Expanded(child: songSearchBlocBuilder()))),
-              SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader, headerIndex: 1, collapseHeaderCallBack: collapseHeaderCallBack,),
-              // Visibility(visible: isSectionExpanded[1], child: Container(child: Expanded(child: songSourceBlocBuilder()))),
+              songSearchBlocBuilder()
             ],
           ),
         ),
@@ -112,16 +109,37 @@ BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
           );
         }
         if (state is SearchSourceLoaded) {
-          List<Source> results = state.results;
-          return ListView.builder(
+          List<Source> songResults = state.songResults;
+          List<Source> albumResults = state.albumResults;
+          var songListView = ListView.builder(
               padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: results.length,
+              itemCount: songResults.length,
               itemBuilder: (BuildContext context, int index) {
-                return CommentSourceResultCardItem(sourceData: results[index]);
+                return CommentSourceResultCardItem(sourceData: songResults[index]);
               }
           );
+          var albumListView = ListView.builder(
+              padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: albumResults.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CommentSourceResultCardItem(sourceData: albumResults[index]);
+              }
+          );
+          return Expanded(
+            child: Column(
+              children: [
+                SectionHeader(sectionTitle: LiteralConstants.songCommentHeader, headerIndex: 0, collapseHeaderCallBack: null,),
+                Visibility(visible: true, child: Container(child: Expanded(child: songListView))),
+                SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader, headerIndex: 1, collapseHeaderCallBack: null,),
+                Visibility(visible: true, child: Container(child: Expanded(child: albumListView))),
+              ],
+            ),
+          );
+
         }
         return Center(
           child: Text("No results yet")
@@ -162,9 +180,11 @@ BlocBuilder<SongBloc, SongState> songBlocBuilder() {
           }
 
           //Only requery sources if song changes
+          //TODO: this stops the timer when the next song eventually comes
+          //on if the current song is started over, fix
           if (songInfo != curSongInfo) {
+            BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo, currentAlbum: curSongInfo?.album));
             curSongInfo = songInfo;
-            BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo));
           }
           return NowPlayingCard(songInfo: songInfo);
         }

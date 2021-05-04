@@ -22,7 +22,7 @@ class YouTubeApiClient extends ApiClient {
     final String query = '$title $artist';
     //TODO: use authorization header for key
     //part=snippet gives more info to parse and verify, id just gives
-    final String uri = '${LiteralConstants.baseYoutubeApiUrl}/search?part=snippet&q=$query&key=$key';
+    final String uri = '${LiteralConstants.baseYoutubeApiUrl}/search?part=snippet&q=$query&type=video&key=$key';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
 

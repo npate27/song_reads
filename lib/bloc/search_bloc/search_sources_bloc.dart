@@ -2,12 +2,14 @@
 //https://medium.com/flutter-community/flutter-todos-tutorial-with-flutter-bloc-d9dd833f9df3
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/constants/enums.dart';
 import 'package:song_reads/models/comment_info.dart';
 import 'package:song_reads/repositories/repositories.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/models/models.dart';
 import 'package:song_reads/utils/preferences_store.dart';
+import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
 class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
   final YouTubeRepository ytRepository;
@@ -26,13 +28,26 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
         PreferencesStore preferences = PreferencesStore.instance;
         final int maxResults = preferences.maxResultsPref();
         SongInfo songInfo = event.songInfo;
-        final Future<List<YouTubeVideo>> ytVideos = ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        final Future<List<RedditThread>> redditThreads = redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        //Get Song Results
+        final Future<List<YouTubeVideo>> ytVideosSongs = ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        final Future<List<RedditThread>> redditThreadsSongs = redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
         //TODO: currently assumes top result is the desired one, needs more validation, like title validation
-        final Future<List<GeniusSong>> geniusResult = geniusRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        final List<List<Source>> allResults = await Future.wait([geniusResult, ytVideos, redditThreads]);
-        List<Source> results = allResults.expand((i) => i).toList();
-        yield SearchSourceLoaded(results: results);
+        final Future<List<GeniusSong>> geniusResultSongs = geniusRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        final List<List<Source>> allSongResults = await Future.wait([geniusResultSongs, ytVideosSongs, redditThreadsSongs]);
+        List<Source> songResults = allSongResults.expand((i) => i).toList();
+
+        // //Get Album Results
+        List<Source> albumResults;
+        if(songInfo.album != event.currentAlbum) {
+          final Future<List<YouTubeVideo>> ytVideosAlbums = ytRepository.searchSong(songInfo.album, '', maxResults);
+          final Future<List<RedditThread>> redditThreadsAlbums = redditRepository.searchSong(songInfo.album, '', maxResults);
+          //TODO: currently assumes top result is the desired one, needs more validation, like title validation
+          final Future<List<GeniusSong>> geniusResultAlbums = geniusRepository.searchSong(songInfo.album, '', maxResults);
+          final List<List<Source>> allAlbumResults = await Future.wait([geniusResultAlbums, ytVideosAlbums, redditThreadsAlbums]);
+          albumResults = allAlbumResults.expand((i) => i).toList();
+        }
+
+        yield SearchSourceLoaded(songResults: songResults, albumResults: albumResults);
       } catch (_) { // TODO: More explicit exception
         yield SearchError();
       }

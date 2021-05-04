@@ -11,11 +11,12 @@ abstract class SearchEvent extends Equatable {
 
 class FetchSources extends SearchEvent {
   final SongInfo songInfo;
+  final String currentAlbum;
 
-  FetchSources({this.songInfo});
+  FetchSources({this.songInfo, this.currentAlbum});
 
   @override
-  List<Object> get props => [songInfo];
+  List<Object> get props => [songInfo, currentAlbum];
 }
 
 class FetchComments extends SearchEvent {
