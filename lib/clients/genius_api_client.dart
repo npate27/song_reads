@@ -21,7 +21,7 @@ class GeniusApiClient extends ApiClient{
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: currently assumes top result is the desired one, needs more validation, like title validation
-    
+
     final List<dynamic> topSongResults = sourceType.resultsFromResponse(response, false);
     if(topSongResults.isNotEmpty){
       final Map<String,dynamic> topSongResult = topSongResults[0]['result'];

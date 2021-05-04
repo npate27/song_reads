@@ -27,7 +27,7 @@ class RedditApiClient extends ApiClient {
       final List<RedditThread> result = threadResult.map((result) => RedditThread.fromJson(result['data'])).toList();
       return result;
     } else {
-      return []
+      return [];
     }
 
   }
