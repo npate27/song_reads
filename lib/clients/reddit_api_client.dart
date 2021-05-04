@@ -15,7 +15,8 @@ class RedditApiClient extends ApiClient {
 
   @override
   Future<List<RedditThread>> searchSong(String title, String artist, [int maxResults]) async {
-    final String query = '$title $artist';
+    //TODO: stuff like "Pi'erre" only gets some of the results for reddit, use OR to get more results for those
+    final String query = 'title:(${'$title $artist'.replaceAll(RegExp(' +'), ' AND ')})';
     //TODO: filter my music relevant subreddits only
     final String uri = '${LiteralConstants.baseRedditApiUrl}/search.json?q=$query&sort=top';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
