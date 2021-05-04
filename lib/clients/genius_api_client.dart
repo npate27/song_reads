@@ -21,11 +21,16 @@ class GeniusApiClient extends ApiClient{
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
     //TODO: currently assumes top result is the desired one, needs more validation, like title validation
-    //TODO: check if hits is empty in api client before passing this over
-    final Map<String,dynamic> topSongResult = sourceType.resultsFromResponse(response, false)[0]['result'];
-    final int commentCount = await getCommentsCount(topSongResult['id']);
-    topSongResult['comments_count'] = commentCount;
-    return [GeniusSong.fromJson(topSongResult)];
+    
+    final List<dynamic> topSongResults = sourceType.resultsFromResponse(response, false);
+    if(topSongResults.isNotEmpty){
+      final Map<String,dynamic> topSongResult = topSongResults[0]['result'];
+      final int commentCount = await getCommentsCount(topSongResult['id']);
+      topSongResult['comments_count'] = commentCount;
+      return [GeniusSong.fromJson(topSongResult)];
+    } else {
+      return [];
+    }
   }
 
   @override

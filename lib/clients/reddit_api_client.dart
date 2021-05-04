@@ -21,11 +21,15 @@ class RedditApiClient extends ApiClient {
     final String uri = '${LiteralConstants.baseRedditApiUrl}/search.json?q=$query&sort=top';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
-    //TODO: check if hits is empty in api client before passing this over
 
     final List<dynamic> threadResult = sourceType.resultsFromResponse(response, false, maxResults);
-    final List<RedditThread> result = threadResult.map((result) => RedditThread.fromJson(result['data'])).toList();
-    return result;
+    if(threadResult.isNotEmpty) {
+      final List<RedditThread> result = threadResult.map((result) => RedditThread.fromJson(result['data'])).toList();
+      return result;
+    } else {
+      return []
+    }
+
   }
 
   @override

@@ -25,15 +25,19 @@ class YouTubeApiClient extends ApiClient {
     final String uri = '${LiteralConstants.baseYoutubeApiUrl}/search?part=snippet&q=$query&key=$key';
     final uriEncoded = Uri.parse(Uri.encodeFull(uri));
     final response = parseResponse(await httpClient.get(uriEncoded));
-    //TODO: check if hits is empty in api client before passing this over
+
     final List<dynamic> videoResult = sourceType.resultsFromResponse(response, false, maxResults);
-    final List<Future<YouTubeVideo>> result = videoResult.map((result) async {
-      final String videoId = result['id']['videoId'];
-      final Map<String,dynamic> videoStats = await getVideoStats(videoId, key);
-      result.addAll(videoStats);
-      return YouTubeVideo.fromJson(result);
-    }).toList();
-    return Future.wait(result);
+    if(videoResult.isNotEmpty) {
+      final List<Future<YouTubeVideo>> result = videoResult.map((result) async {
+        final String videoId = result['id']['videoId'];
+        final Map<String,dynamic> videoStats = await getVideoStats(videoId, key);
+        result.addAll(videoStats);
+        return YouTubeVideo.fromJson(result);
+      }).toList();
+      return Future.wait(result);
+    } else {
+      return [];
+    }
   }
 
   Future<Map<String,dynamic>> getVideoStats(String videoId, String key) async {
