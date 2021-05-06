@@ -15,7 +15,7 @@ class CommentSourceResultCardItem extends StatelessWidget {
     return InkWell(
       onTap: () { Navigator.pushNamed(context, RouterConstants.commentsRoute, arguments: sourceData); },
       child: Container(
-        padding: EdgeInsets.fromLTRB(10,10,10,0),
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         height: 100,
         child: Card(
           elevation: 5,
