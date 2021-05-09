@@ -23,11 +23,6 @@ class Router {
     switch (settings.name) {
       case RouteConstants.mainRoute:
         return MaterialPageRoute(builder: (_) => MainPage(), settings: settings);
-      case RouteConstants.commentsRoute:
-        return MaterialPageRoute(builder: (BuildContext context) {
-          final Source sourceData = settings.arguments;
-          return CommentsPage(sourceData: sourceData);
-        }, settings: settings);
       case RouteConstants.preferencesRoute:
         return MaterialPageRoute(builder: (_) => PreferencesPage(authCode: null), settings: settings);
       default:
