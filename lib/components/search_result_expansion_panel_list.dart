@@ -22,7 +22,7 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
         ExpansionPanel(
           isExpanded: _isOpen[0],
           headerBuilder: (BuildContext context, bool isExpanded) {
-            return SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader);
+            return SectionHeader(sectionTitle: LiteralConstants.songCommentHeader);
           },
           body: ListView.builder(
            padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
