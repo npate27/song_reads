@@ -18,34 +18,33 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
   @override
   Widget build(BuildContext context) {
     return ExpansionPanelList(
+      expandedHeaderPadding: EdgeInsets.zero,
+      dividerColor: Colors.transparent,
+      elevation: 0,
       children: [
-        ExpansionPanel(
-          isExpanded: _isOpen[0],
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return SectionHeader(sectionTitle: LiteralConstants.songCommentHeader);
-          },
-          body: ListView.builder(
-           padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
-           scrollDirection: Axis.vertical,
-           shrinkWrap: true,
-           // itemCount: widget.results.length,
-           itemCount: 10,
-           itemBuilder: (BuildContext context, int index) {
-             //TODO: temporary to avoid hitting api limits, remove
-             // return CommentSourceResultCardItem(sourceData: widget.results[index]);
-             return CommentSourceResultCardItem(sourceData: GeniusSong(
-                 id: "test", title: "test", likes: 42069, numComments: 69));
-           })
-        ),
-        ExpansionPanel(
-          isExpanded: _isOpen[1],
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader);
-          },
-          body: ListView.builder(
+        resultExpansionPanel(LiteralConstants.songCommentHeader, widget.songResults, 0),
+        resultExpansionPanel(LiteralConstants.albumCommentHeader, widget.albumResults, 1)
+      ],
+      expansionCallback: (i, isOpen) =>
+        setState(() =>
+          _isOpen[i] = !isOpen,
+        )
+    );
+  }
+
+  ExpansionPanel resultExpansionPanel(String headerTitle, List<Source> results, int isExpandedIndex) {
+    return ExpansionPanel(
+        canTapOnHeader: true,
+        backgroundColor: Colors.transparent,
+        isExpanded: _isOpen[isExpandedIndex],
+        headerBuilder: (BuildContext context, bool isExpanded) {
+          return SectionHeader(sectionTitle: headerTitle);
+        },
+        body: ListView.builder(
             padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
+            physics: new NeverScrollableScrollPhysics(),
             // itemCount: widget.results.length,
             itemCount: 10,
             itemBuilder: (BuildContext context, int index) {
@@ -54,12 +53,6 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
               return CommentSourceResultCardItem(sourceData: GeniusSong(
                   id: "test", title: "test", likes: 42069, numComments: 69));
             })
-        )
-      ],
-      expansionCallback: (i, isOpen) =>
-        setState(() =>
-          _isOpen[i] = !isOpen,
-        )
     );
   }
 }
