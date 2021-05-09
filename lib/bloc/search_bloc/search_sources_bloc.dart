@@ -22,32 +22,36 @@ class SearchSourceBloc extends Bloc<SearchEvent, SearchState> {
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async*{
     if (event is FetchSources) {
+
       yield SearchLoading();
+      //TODO: temporary to avoid hitting api limits, remove
       try {
-        //TODO: Make these lists of top N results to be merged into one list (random order? allow filtering?)
-        PreferencesStore preferences = PreferencesStore.instance;
-        final int maxResults = preferences.maxResultsPref();
-        SongInfo songInfo = event.songInfo;
-        //Get Song Results
-        final Future<List<YouTubeVideo>> ytVideosSongs = ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        final Future<List<RedditThread>> redditThreadsSongs = redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        //TODO: currently assumes top result is the desired one, needs more validation, like title validation
-        final Future<List<GeniusSong>> geniusResultSongs = geniusRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
-        final List<List<Source>> allSongResults = await Future.wait([geniusResultSongs, ytVideosSongs, redditThreadsSongs]);
-        List<Source> songResults = allSongResults.expand((i) => i).toList();
+        // //TODO: Make these lists of top N results to be merged into one list (random order? allow filtering?)
+        // PreferencesStore preferences = PreferencesStore.instance;
+        // final int maxResults = preferences.maxResultsPref();
+        // SongInfo songInfo = event.songInfo;
+        // //Get Song Results
+        // final Future<List<YouTubeVideo>> ytVideosSongs = ytRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        // final Future<List<RedditThread>> redditThreadsSongs = redditRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        // //TODO: currently assumes top result is the desired one, needs more validation, like title validation
+        // final Future<List<GeniusSong>> geniusResultSongs = geniusRepository.searchSong(songInfo.title, songInfo.artist, maxResults);
+        // final List<List<Source>> allSongResults = await Future.wait([geniusResultSongs, ytVideosSongs, redditThreadsSongs]);
+        // List<Source> songResults = allSongResults.expand((i) => i).toList();
 
         // //Get Album Results
-        List<Source> albumResults;
-        if(songInfo.album != event.currentAlbum) {
-          final Future<List<YouTubeVideo>> ytVideosAlbums = ytRepository.searchSong(songInfo.album, songInfo.artist, maxResults);
-          final Future<List<RedditThread>> redditThreadsAlbums = redditRepository.searchSong(songInfo.album, songInfo.artist, maxResults);
-          //TODO: currently assumes top result is the desired one, needs more validation, like title validation
-          final Future<List<GeniusSong>> geniusResultAlbums = geniusRepository.searchSong(songInfo.album, songInfo.artist, maxResults);
-          final List<List<Source>> allAlbumResults = await Future.wait([geniusResultAlbums, ytVideosAlbums, redditThreadsAlbums]);
-          albumResults = allAlbumResults.expand((i) => i).toList();
-        }
+        // List<Source> albumResults;
+        // if(songInfo.album != event.currentAlbum) {
+        //   final Future<List<YouTubeVideo>> ytVideosAlbums = ytRepository.searchSong(songInfo.album, '', maxResults);
+        //   final Future<List<RedditThread>> redditThreadsAlbums = redditRepository.searchSong(songInfo.album, '', maxResults);
+        //   //TODO: currently assumes top result is the desired one, needs more validation, like title validation
+        //   final Future<List<GeniusSong>> geniusResultAlbums = geniusRepository.searchSong(songInfo.album, '', maxResults);
+        //   final List<List<Source>> allAlbumResults = await Future.wait([geniusResultAlbums, ytVideosAlbums, redditThreadsAlbums]);
+        //   albumResults = allAlbumResults.expand((i) => i).toList();
+        // }
 
-        yield SearchSourceLoaded(songResults: songResults, albumResults: albumResults);
+
+        // yield SearchSourceLoaded(songResults: songResults, albumResults: songResults);
+        yield SearchSourceLoaded(songResults: null, albumResults: null);
       } catch (_) { // TODO: More explicit exception
         yield SearchError();
       }

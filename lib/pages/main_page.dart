@@ -8,12 +8,12 @@ import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/components/comment_source_result_card.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/components/now_playing_card.dart';
+import 'package:song_reads/components/search_result_expansion_panel_list.dart';
 import 'package:song_reads/components/section_header.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
-import 'package:song_reads/utils/token_store.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -23,14 +23,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  //TODO: maybe make this an enum so can be expanded upon later
-  List<bool> isSectionExpanded = [true, true]; //[Song section, Album section]
-  //TODO: manage this with bloc? or too complex? Just dont want to redraw entire widget tree because of this...
-  void collapseHeaderCallBack(int index) {
-    setState(() {
-      isSectionExpanded[index] = !isSectionExpanded[index];
-    });
-  }
 
   @override
   void dispose() {
@@ -79,7 +71,7 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
               songBlocBuilder(),
-              songSearchBlocBuilder()
+              songSearchBlocBuilder(),
             ],
           ),
         ),
@@ -111,35 +103,12 @@ BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
         if (state is SearchSourceLoaded) {
           List<Source> songResults = state.songResults;
           List<Source> albumResults = state.albumResults;
-          var songListView = ListView.builder(
-              padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: songResults.length,
-              itemBuilder: (BuildContext context, int index) {
-                return CommentSourceResultCardItem(sourceData: songResults[index]);
-              }
-          );
-          var albumListView = ListView.builder(
-              padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: albumResults.length,
-              itemBuilder: (BuildContext context, int index) {
-                return CommentSourceResultCardItem(sourceData: albumResults[index]);
-              }
-          );
+
           return Expanded(
-            child: Column(
-              children: [
-                SectionHeader(sectionTitle: LiteralConstants.songCommentHeader, headerIndex: 0, collapseHeaderCallBack: null,),
-                Visibility(visible: true, child: Container(child: Expanded(child: songListView))),
-                SectionHeader(sectionTitle: LiteralConstants.albumCommentHeader, headerIndex: 1, collapseHeaderCallBack: null,),
-                Visibility(visible: true, child: Container(child: Expanded(child: albumListView))),
-              ],
+            child: SingleChildScrollView(
+              child: SearchResultExpansionPanelList(songResults: songResults, albumResults: albumResults),
             ),
           );
-
         }
         return Center(
           child: Text("No results yet")
