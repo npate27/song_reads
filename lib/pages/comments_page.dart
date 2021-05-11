@@ -19,73 +19,113 @@ class CommentsPage extends StatefulWidget {
   _CommentsPageState createState() => _CommentsPageState();
 }
 
-class _CommentsPageState extends State<CommentsPage> {
+class _CommentsPageState extends State<CommentsPage> with SingleTickerProviderStateMixin{
   SearchSourceBloc bloc = SearchSourceBloc(
       ytRepository: YouTubeRepository(apiClient: YouTubeApiClient(httpClient: AppHttpClient().client)),
       redditRepository: RedditRepository(apiClient: RedditApiClient(httpClient: AppHttpClient().client)),
       geniusRepository: GeniusRepository(apiClient: GeniusApiClient(httpClient: AppHttpClient().client))
   );
+  Animation<double> animation;
+  AnimationController animationController;
+  Source sourceData;
+  CommentSource commentSource;
+  Widget animatedIconWidget;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    animation = Tween(begin: 5.0, end: 0.0).animate(animationController)
+      ..addListener(() {
+        setState(() {
+          animatedIconWidget = Icon(Icons.open_in_new, color: Colors.black, key: ValueKey<int>(1));
+        });
+      });
+    animationController.forward();
+    sourceData = widget.sourceData;
+    commentSource = sourceData.commentSource;
+    animatedIconWidget = Icon(Icons.arrow_forward_ios_sharp, color: Colors.black, key: ValueKey<int>(0));
+  }
 
   @override
   Widget build(BuildContext context) {
-    Source sourceData = widget.sourceData;
-    CommentSource commentSource = sourceData.commentSource;
-    return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            height: 100,
-            child: Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Container(
-                decoration: BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            stops: [0.25, 1],
+            colors: [commentSource.sourceImageBaseColor, commentSource.sourceImageBaseColor.withOpacity(0.35)],
+          )
+      ),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Column(
+            children: [
+              //TODO this Container is repetitive to CommentSourceResultCardItem, reuse this
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                height: 100,
+                child: Card(
+                  elevation: animation.value,
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      stops: [0.25, 1],
-                      colors: [commentSource.sourceImageBaseColor, commentSource.sourceImageBaseColor.withOpacity(0.35)],
-                    )
-                ),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        flex: 8,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          stops: [0.25, 1],
+                          colors: [commentSource.sourceImageBaseColor, commentSource.sourceImageBaseColor.withOpacity(0.35)],
+                        )
+                    ),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            flex: 8,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: Image.asset(commentSource.sourceImagePath),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                      child: Image.asset(commentSource.sourceImagePath),
+                                    ),
+                                    //TODO: There's gotta be a better way of doing this surely
+                                    Flexible(child: Container(child: CommentSourceInfo(sourceData: sourceData,)))
+                                  ],
                                 ),
-                                //TODO: There's gotta be a better way of doing this surely
-                                Flexible(child: Container(child: CommentSourceInfo(sourceData: sourceData,)))
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: Icon(Icons.arrow_forward_ios_sharp, color: Colors.white,),
-                        ),
-                      )
-                    ]
+                          ),
+                          Flexible(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                              child: AnimatedSwitcher(
+                                transitionBuilder: (Widget child, Animation<double> animation) {
+                                  return ScaleTransition(scale: animation, child: child);
+                                },
+                                duration: const Duration(milliseconds: 500),
+                                child: animatedIconWidget
+                              )
+                            ),
+                          )
+                        ]
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Container(child: Expanded(child: songSearchCommentsBlocBuilder(bloc, widget.sourceData.id, widget.sourceData.commentSource)))
+            ],
           ),
-          Container(child: Expanded(child: songSearchCommentsBlocBuilder(bloc, widget.sourceData.id, widget.sourceData.commentSource)))
-        ],
+        ),
       ),
     );
   }
@@ -96,7 +136,6 @@ class _CommentsPageState extends State<CommentsPage> {
     super.dispose();
   }
 }
-
 
 //Generate ListView of song sources for comments
 BlocBuilder<SearchSourceBloc, SearchState> songSearchCommentsBlocBuilder(SearchSourceBloc bloc, String sourceId, CommentSource source) {
