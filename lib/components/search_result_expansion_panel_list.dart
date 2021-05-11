@@ -5,15 +5,27 @@ import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 
 class SearchResultExpansionPanelList extends StatefulWidget {
-  final List<Source> albumResults, songResults;
-  const SearchResultExpansionPanelList({Key key, this.albumResults, this.songResults}) : super(key: key);
+  final List<Source> songResults, albumResults;
+  const SearchResultExpansionPanelList({Key key, this.songResults, this.albumResults}) : super(key: key);
 
   @override
   _SearchResultExpansionPanelListState createState() => _SearchResultExpansionPanelListState();
 }
 
 class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPanelList> {
-  List<bool> _isOpen = [false, false];
+  List<bool> _isOpen = [false, false]; //[song, album]
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _isOpen[0] = widget.songResults.isNotEmpty;
+        _isOpen[1] = widget.albumResults.isNotEmpty;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
