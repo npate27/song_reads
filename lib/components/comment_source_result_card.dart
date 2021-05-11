@@ -23,56 +23,53 @@ class CommentSourceResultCardItem extends StatelessWidget {
         return CommentsPage(sourceData: sourceData);
       },
       closedBuilder: (BuildContext context, void Function() action) {
-        return Hero(
-          tag: '${sourceData.commentSource.inString}-${sourceData.id}',
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            height: 100,
-            child: Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          height: 100,
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    stops: [0.25, 1],
+                    colors: [commentSource.sourceImageBaseColor, commentSource.sourceImageBaseColor.withOpacity(0.35)],
+                  )
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      stops: [0.25, 1],
-                      colors: [commentSource.sourceImageBaseColor, commentSource.sourceImageBaseColor.withOpacity(0.35)],
-                    )
-                ),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        flex: 8,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: Image.asset(commentSource.sourceImagePath),
-                                ),
-                                //TODO: There's gotta be a better way of doing this surely
-                                Flexible(child: Container(child: CommentSourceInfo(sourceData: sourceData,)))
-                              ],
-                            ),
-                          ],
-                        ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      flex: 8,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Image.asset(commentSource.sourceImagePath),
+                              ),
+                              //TODO: There's gotta be a better way of doing this surely
+                              Flexible(child: Container(child: CommentSourceInfo(sourceData: sourceData,)))
+                            ],
+                          ),
+                        ],
                       ),
-                      Flexible(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: Icon(Icons.arrow_forward_ios_sharp, color: Colors.white,),
-                        ),
-                      )
-                    ]
-                ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        child: Icon(Icons.arrow_forward_ios_sharp, color: Colors.white,),
+                      ),
+                    )
+                  ]
               ),
             ),
           ),
