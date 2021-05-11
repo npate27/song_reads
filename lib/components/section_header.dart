@@ -15,32 +15,29 @@ class _SectionHeaderState extends State<SectionHeader> {
   Widget build(BuildContext context) {
 
     return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-        child: Row(
-            children: [
-              Text(
-                  widget.sectionTitle,
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
-              ),
-              //Stylized divider
-              Expanded(
-                child: Padding(
-                  padding:EdgeInsets.only(left: 10.0),
-                  child:Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color:Colors.black,
-                          width: 2.5,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0)
-                    ),
+      padding: EdgeInsets.only(left: 10.0),
+      child: Row(
+          children: [
+            Text(
+                widget.sectionTitle,
+                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
+            ),
+            //Stylized divider
+            Expanded(
+              child: Padding(
+                padding:EdgeInsets.only(left: 10.0),
+                child:Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color:Colors.black,
+                        width: 2.5,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0)
                   ),
                 ),
               ),
-            ]
-        ),
+            ),
+          ]
       ),
     );
   }
