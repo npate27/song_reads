@@ -16,6 +16,7 @@ class CommentSourceResultCardItem extends StatelessWidget {
     CommentSource commentSource = sourceData.commentSource;
     return OpenContainer(
       tappable: true,
+      closedColor: Colors.transparent,
       closedElevation: 0,
       closedShape: const RoundedRectangleBorder(),
       openBuilder: (BuildContext context, void Function({Object returnValue}) action) {
