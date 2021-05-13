@@ -21,8 +21,8 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        _isOpen[0] = widget.songResults.isNotEmpty;
-        _isOpen[1] = widget.albumResults.isNotEmpty;
+        _isOpen[0] = widget.songResults?.isNotEmpty;
+        _isOpen[1] = widget.albumResults?.isNotEmpty;
       });
     });
   }
