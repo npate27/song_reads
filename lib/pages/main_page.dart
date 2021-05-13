@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +23,22 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin{
+  AnimationController animationController;
+  Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeIn,
+    );
+  }
 
   @override
   void dispose() {
@@ -32,137 +48,151 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor: Colors.grey,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-            showModalBottomSheet(
+          showModalBottomSheet(
               isScrollControlled: false,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
               backgroundColor: Colors.white,
               context: context,
               builder: (context) => SongSearchSheet()
-            );
+          );
         },
         child: Icon(Icons.search),
         backgroundColor: Colors.red,
       ),
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                        LiteralConstants.appName,
-                        style: TextStyle (fontSize: 30.0, fontWeight: FontWeight.bold)
+      body: Stack(
+          children: [
+            //TODO: change this to be previous album's color for next reveal when animation is reset
+            Container(color: Colors.green),
+            CircularRevealAnimation(
+              child: SizedBox.expand(child: Container(color: Colors.red)),
+              //TODO: Do this better. Currently really rough calculations based on padding/img values
+              // maybe use GlobalKey on image to get position?
+              centerOffset: Offset(50, MediaQuery.of(context).padding.top + 100),
+              animation: animation,
+              minRadius: 0,
+              maxRadius: MediaQuery.of(context).size.height,
+            ),
+            SafeArea(
+              child: Center(
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              LiteralConstants.appName,
+                              style: TextStyle (fontSize: 30.0, fontWeight: FontWeight.bold)
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            icon: Icon(Icons.settings, size: 30,),
+                            onPressed: () { Navigator.pushNamed(context, RouterConstants.preferencesRoute); },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                        icon: Icon(Icons.settings, size: 30,),
-                        onPressed: () { Navigator.pushNamed(context, RouterConstants.preferencesRoute); },
-                    ),
-                  ),
-                ],
+                    songBlocBuilder(),
+                    songSearchBlocBuilder(),
+                  ],
+                ),
               ),
-              songBlocBuilder(),
-              songSearchBlocBuilder(),
-            ],
-          ),
-        ),
+            ),
+          ]
       ),
     );
   }
-}
 
-//Generate ListView of song sources for comments
-BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
-  return BlocBuilder<SearchSourceBloc, SearchState>(
-      builder: (context, state) {
-        if (state is SearchEmpty) {
-          //TODO: get the query dynamically via OS-specific APIs
-          return Center(
-            child: Text("No results yet"),
-          );
-        }
-        if (state is SearchError) {
-          return Center(
-            child: Text('Failed to fetch source results'),
-          );
-        }
-        if (state is SearchLoading) {
-          return Center(
-            child: CustomLoadingIndicator()
-          );
-        }
-        if (state is SearchSourceLoaded) {
-          List<Source> songResults = state.songResults;
-          List<Source> albumResults = state.albumResults;
-
-          return Expanded(
-            child: SingleChildScrollView(
-              child: SearchResultExpansionPanelList(songResults: songResults, albumResults: albumResults),
-            ),
-          );
-        }
-        return Center(
-          child: Text("No results yet")
-        );
-      }
-  );
-}
-
-//Update NowPlayingCard when new song is selected in modal or currently playing song if any on spotify if user is logged in
-BlocBuilder<SongBloc, SongState> songBlocBuilder() {
-  //Empty timer init since it cant be null
-  Timer delayNextQueryTimer = Timer(Duration(seconds: 0), () => {});
-  SongInfo curSongInfo;
-  return BlocBuilder<SongBloc, SongState>(
-      builder: (context, state) {
-        if (state is SongDiscovery) {
-          if(state.isLoggedIn) {
-            BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
-          }
-          return Center(
-            child: Text("No song detected or selected, search for one")
-        );
-        }
-        if (state is SongLoaded) {
-          SongInfo songInfo = state.songInfo;
-          int delayNextQueryMs = state.delayNextQueryMs;
-
-          //Cancel timer since we revert to manual selection
-          if(delayNextQueryMs == null) {
-            delayNextQueryTimer.cancel();
-          }
-          //Wait for song to end to requery if needed
-          else {
-            delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs), () {
-              //TODO handle ads
+  //Update NowPlayingCard when new song is selected in modal or currently playing song if any on spotify if user is logged in
+  BlocBuilder<SongBloc, SongState> songBlocBuilder() {
+    //Empty timer init since it cant be null
+    Timer delayNextQueryTimer = Timer(Duration(seconds: 0), () => {});
+    SongInfo curSongInfo;
+    return BlocBuilder<SongBloc, SongState>(
+        builder: (context, state) {
+          if (state is SongDiscovery) {
+            if(state.isLoggedIn) {
               BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
-            });
+            }
+            return Center(
+                child: Text("No song detected or selected, search for one")
+            );
           }
+          if (state is SongLoaded) {
+            SongInfo songInfo = state.songInfo;
+            int delayNextQueryMs = state.delayNextQueryMs;
 
-          //Only requery sources if song changes
-          //TODO: this stops the timer when the next song eventually comes
-          //on if the current song is started over, fix
-          if (songInfo != curSongInfo) {
-            BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo, currentAlbum: curSongInfo?.album));
-            curSongInfo = songInfo;
+            //Cancel timer since we revert to manual selection
+            if(delayNextQueryMs == null) {
+              delayNextQueryTimer.cancel();
+            }
+            //Wait for song to end to requery if needed
+            else {
+              delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs), () {
+                //TODO handle ads
+                BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
+              });
+            }
+
+            //Only requery sources if song changes
+            //TODO: this stops the timer when the next song eventually comes
+            //on if the current song is started over, fix
+            if (songInfo != curSongInfo) {
+              BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo, currentAlbum: curSongInfo?.album));
+              curSongInfo = songInfo;
+              animationController.forward();
+            }
+            return NowPlayingCard(songInfo: songInfo);
           }
-          return NowPlayingCard(songInfo: songInfo);
+          if (state is SongInit) {
+            BlocProvider.of<SongBloc>(context).add(SongLoginCheck());
+          }
+          return Center(
+              child: Text("No song detected or selected, search for one")
+          );
         }
-        if (state is SongInit) {
-          BlocProvider.of<SongBloc>(context).add(SongLoginCheck());
+    );
+  }
+
+  //Generate ListView of song sources for comments
+  BlocBuilder<SearchSourceBloc, SearchState> songSearchBlocBuilder() {
+    return BlocBuilder<SearchSourceBloc, SearchState>(
+        builder: (context, state) {
+          if (state is SearchEmpty) {
+            //TODO: get the query dynamically via OS-specific APIs
+            return Center(
+              child: Text("No results yet"),
+            );
+          }
+          if (state is SearchError) {
+            return Center(
+              child: Text('Failed to fetch source results'),
+            );
+          }
+          if (state is SearchLoading) {
+            return Center(
+                child: CustomLoadingIndicator()
+            );
+          }
+          if (state is SearchSourceLoaded) {
+            List<Source> songResults = state.songResults;
+            List<Source> albumResults = state.albumResults;
+
+            return Expanded(
+              child: SingleChildScrollView(
+                child: SearchResultExpansionPanelList(songResults: songResults, albumResults: albumResults),
+              ),
+            );
+          }
+          return Center(
+              child: Text("No results yet")
+          );
         }
-        return Center(
-            child: Text("No song detected or selected, search for one")
-        );
-      }
-  );
+    );
+  }
 }
