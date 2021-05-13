@@ -19,22 +19,21 @@ class SongBloc extends Bloc<SongEvent, SongState> {
       List<Object> currentSongResults = await spotifyRepository.getCurrentlyPlayingSong();
       //TODO: temporary to avoid hitting api limits, remove
       //Check if user is logged in
-      // if(currentSongResults == null) {
-      //   yield SongDiscovery(isLoggedIn: false);
-      // }
-      // else {
-      //   if(currentSongResults.isEmpty) {
-      //     //Could be an advert or spotify is not open, wait before requerying
-      //     await Future.delayed(Duration(milliseconds: 5000));
-      //     yield SongDiscovery(isLoggedIn: true);
-      //   } else {
-      //     //Parse song and indicate time till next song takes over
-      //     SongInfo songInfo = currentSongResults[0];
-      //     int delayNextCurrentSongQueryMs = currentSongResults[1];
-      //     yield SongLoaded(songInfo: songInfo, delayNextQueryMs: delayNextCurrentSongQueryMs);
-      //   }
-      // }
-      yield SongLoaded(songInfo: SongInfo(title:"test", artist:"test", album:"test", artworkImage:"https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659652_960_720.png"), delayNextQueryMs: null);
+      if(currentSongResults == null) {
+        yield SongDiscovery(isLoggedIn: false);
+      }
+      else {
+        if(currentSongResults.isEmpty) {
+          //Could be an advert or spotify is not open, wait before requerying
+          await Future.delayed(Duration(milliseconds: 5000));
+          yield SongDiscovery(isLoggedIn: true);
+        } else {
+          //Parse song and indicate time till next song takes over
+          SongInfo songInfo = currentSongResults[0];
+          int delayNextCurrentSongQueryMs = currentSongResults[1];
+          yield SongLoaded(songInfo: songInfo, delayNextQueryMs: delayNextCurrentSongQueryMs);
+        }
+      }
     }
     else if (event is UpdateSong) {
       yield SongLoaded(songInfo: event.songInfo, delayNextQueryMs: null);
