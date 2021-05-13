@@ -15,9 +15,8 @@ class NowPlayingCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(10,10,10,0),
       height: 100,
-      width: double.maxFinite,
       child: Card(
-        elevation: 5,
+        color: Colors.transparent,
         child: Stack(
           children: [
             FutureBuilder(
