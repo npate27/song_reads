@@ -17,7 +17,6 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -57,11 +56,11 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             physics: new NeverScrollableScrollPhysics(),
-            // itemCount: widget.results.length,
+            // itemCount: results.length,
             itemCount: 10,
             itemBuilder: (BuildContext context, int index) {
               //TODO: temporary to avoid hitting api limits, remove
-              // return CommentSourceResultCardItem(sourceData: widget.results[index]);
+              // return CommentSourceResultCardItem(sourceData: results[index]);
               return CommentSourceResultCardItem(sourceData: GeniusSong(
                   id: "test", title: "test", likes: 42069, numComments: 69));
             })
