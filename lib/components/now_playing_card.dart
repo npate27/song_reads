@@ -19,7 +19,9 @@ class NowPlayingCard extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(10,10,10,0),
       height: 100,
       child: Card(
+        borderOnForeground: false,
         color: Colors.transparent,
+        elevation: 0,
         child: Stack(
           children: [
             FutureBuilder(
@@ -71,7 +73,7 @@ class NowPlayingCard extends StatelessWidget {
               alignment: Alignment.topRight,
               child:
               Container(
-                  decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50.0))),
+                  decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.all(Radius.circular(50.0))),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                     child: Text(LiteralConstants.nowPlayingCardHeader, style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
