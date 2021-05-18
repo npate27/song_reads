@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   BlocBuilder<ColorRevealBloc, ColorRevealState> colorRevealBuilder() {
     Color previousColor;
     Color revealColor;
+    MediaQueryData mediaQuery = MediaQuery.of(context);
     return BlocBuilder<ColorRevealBloc, ColorRevealState>(
       builder: (context, state) {
         animationController.reset();
@@ -126,10 +128,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               child: SizedBox.expand(child: Container(color: revealColor)),
               //TODO: Do this better. Currently really rough calculations based on padding/img values
               // maybe use GlobalKey on image to get position?
-              centerOffset: Offset(50, MediaQuery.of(context).padding.top + 100),
+              centerOffset: Offset(50, mediaQuery.padding.top + 100),
               animation: animation,
               minRadius: 0,
-              maxRadius: MediaQuery.of(context).size.height,
+              maxRadius: sqrt( pow(mediaQuery.size.width-50, 2)+ pow(mediaQuery.size.height-mediaQuery.padding.top-100, 2)),
             )
           ],
         );
