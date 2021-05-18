@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:song_reads/bloc/blocs.dart';
+import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
 import 'package:song_reads/components/comment_source_result_card.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/components/now_playing_card.dart';
@@ -64,17 +65,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       ),
       body: Stack(
           children: [
-            //TODO: change this to be previous album's color for next reveal when animation is reset
-            Container(color: Colors.green),
-            CircularRevealAnimation(
-              child: SizedBox.expand(child: Container(color: Colors.red)),
-              //TODO: Do this better. Currently really rough calculations based on padding/img values
-              // maybe use GlobalKey on image to get position?
-              centerOffset: Offset(50, MediaQuery.of(context).padding.top + 100),
-              animation: animation,
-              minRadius: 0,
-              maxRadius: MediaQuery.of(context).size.height,
-            ),
+            colorRevealBuilder(),
             SafeArea(
               child: Center(
                 child: Column(
@@ -108,6 +99,45 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     );
   }
 
+  //Updates background circular reveal animation color when
+  BlocBuilder<ColorRevealBloc, ColorRevealState> colorRevealBuilder() {
+    Color previousColor;
+    Color revealColor;
+    return BlocBuilder<ColorRevealBloc, ColorRevealState>(
+      builder: (context, state) {
+        animationController.reset();
+        if (state is InitialColorRevealState) {
+          previousColor = Colors.grey;
+          revealColor = Colors.grey;
+        }
+        if (state is ChangeColorRevealState){
+          previousColor = revealColor;
+          revealColor = state.color;
+        }
+
+        Future.delayed(const Duration(milliseconds: 100), () {
+          animationController.forward();
+        });
+
+        return Stack(
+          children: [
+            Container(color: previousColor),
+            CircularRevealAnimation(
+              child: SizedBox.expand(child: Container(color: revealColor)),
+              //TODO: Do this better. Currently really rough calculations based on padding/img values
+              // maybe use GlobalKey on image to get position?
+              centerOffset: Offset(50, MediaQuery.of(context).padding.top + 100),
+              animation: animation,
+              minRadius: 0,
+              maxRadius: MediaQuery.of(context).size.height,
+            )
+          ],
+        );
+
+      }
+    );
+  }
+
   //Update NowPlayingCard when new song is selected in modal or currently playing song if any on spotify if user is logged in
   BlocBuilder<SongBloc, SongState> songBlocBuilder() {
     //Empty timer init since it cant be null
@@ -125,8 +155,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           }
           if (state is SongLoaded) {
             SongInfo songInfo = state.songInfo;
-            int delayNextQueryMs = state.delayNextQueryMs;
-
+            //extra padding for delays in network request in case song result came up the same still
+            int delayNextQueryMs = state.delayNextQueryMs + 1500;
             //Cancel timer since we revert to manual selection
             if(delayNextQueryMs == null) {
               delayNextQueryTimer.cancel();
@@ -145,7 +175,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             if (songInfo != curSongInfo) {
               BlocProvider.of<SearchSourceBloc>(context).add(FetchSources(songInfo: songInfo, currentAlbum: curSongInfo?.album));
               curSongInfo = songInfo;
-              animationController.forward();
             }
             return NowPlayingCard(songInfo: songInfo);
           }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:song_reads/bloc/blocs.dart';
+import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
 import 'package:song_reads/clients/clients.dart';
 import 'package:song_reads/clients/http_client_singleton.dart';
 import 'package:song_reads/repositories/reddit_repository.dart';
@@ -53,6 +54,9 @@ class SongReads extends StatelessWidget {
         ),
         BlocProvider<SongBloc>(
           create: (BuildContext context) => SongBloc(spotifyRepository: SpotifyRepository(apiClient: SpotifyApiClient(httpClient: AppHttpClient().client)))
+        ),
+        BlocProvider<ColorRevealBloc>(
+          create: (BuildContext context) => ColorRevealBloc()
         )
       ],
       child: MaterialApp(

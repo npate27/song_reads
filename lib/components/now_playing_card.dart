@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:song_reads/bloc/blocs.dart';
+import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
@@ -23,6 +26,7 @@ class NowPlayingCard extends StatelessWidget {
                 future: PaletteGenerator.fromImageProvider(NetworkImage(songInfo.artworkImage)),
                 builder: (BuildContext context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                    BlocProvider.of<ColorRevealBloc>(context).add(UpdateRevealColor(color: snapshot.data.dominantColor.color));
                     return Container(
                       color: snapshot.data.dominantColor.color,
                       child: Row(
