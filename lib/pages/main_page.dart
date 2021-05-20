@@ -34,7 +34,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 500),
     );
     animation = CurvedAnimation(
       parent: animationController,
