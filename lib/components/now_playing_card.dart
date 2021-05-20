@@ -30,7 +30,7 @@ class NowPlayingCard extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                     BlocProvider.of<ColorRevealBloc>(context).add(UpdateRevealColor(color: snapshot.data.dominantColor.color));
                     return Container(
-                      color: snapshot.data.dominantColor.color,
+                      color: Colors.transparent,
                       child: Row(
                         children: [
                           Image.network(songInfo.artworkImage, height: 100),
@@ -66,7 +66,7 @@ class NowPlayingCard extends StatelessWidget {
                     );
                   }
                   //TODO: make this better
-                  return Align(alignment: Alignment.center, child: CustomLoadingIndicator());
+                  return Center(child: Text("Getting song info...", style: TextStyle(fontSize: 20),));
                 }
             ),
             Align(
