@@ -157,15 +157,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           }
           if (state is SongLoaded) {
             SongInfo songInfo = state.songInfo;
-            //extra padding for delays in network request in case song result came up the same still
-            int delayNextQueryMs = state.delayNextQueryMs + 1500;
+            int delayNextQueryMs = state.delayNextQueryMs;
             //Cancel timer since we revert to manual selection
             if(delayNextQueryMs == null) {
               delayNextQueryTimer.cancel();
             }
             //Wait for song to end to requery if needed
+            //extra padding for delays in network request in case song result came up the same still
             else {
-              delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs), () {
+              delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs + 1500), () {
                 //TODO handle ads
                 BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
               });
