@@ -11,4 +11,4 @@ export 'song_bloc/song_bloc.dart';
 //Song updating
 export 'color_reveal/color_reveal_event.dart';
 export 'color_reveal/color_reveal_state.dart';
-export 'color_reveal/color_reveal_state.dart';
+export 'color_reveal/color_reveal_bloc.dart';
