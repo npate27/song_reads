@@ -3,16 +3,13 @@ import 'dart:math';
 
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
-import 'package:song_reads/components/comment_source_result_card.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/components/now_playing_card.dart';
 import 'package:song_reads/components/search_result_expansion_panel_list.dart';
-import 'package:song_reads/components/section_header.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
@@ -104,7 +101,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   BlocBuilder<ColorRevealBloc, ColorRevealState> colorRevealBuilder() {
     Color previousColor;
     Color revealColor;
-    MediaQueryData mediaQuery = MediaQuery.of(context);
     return BlocBuilder<ColorRevealBloc, ColorRevealState>(
       builder: (context, state) {
         animationController.reset();
@@ -116,26 +112,31 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           previousColor = revealColor;
           revealColor = state.color;
         }
-
         Future.delayed(const Duration(milliseconds: 100), () {
           animationController.forward();
         });
 
-        return Stack(
-          children: [
-            Container(color: previousColor),
-            CircularRevealAnimation(
-              child: SizedBox.expand(child: Container(color: revealColor)),
-              //TODO: Do this better. Currently really rough calculations based on padding/img values
-              // maybe use GlobalKey on image to get position?
-              centerOffset: Offset(50, mediaQuery.padding.top + 100),
-              animation: animation,
-              minRadius: 0,
-              maxRadius: sqrt( pow(mediaQuery.size.width-50, 2)+ pow(mediaQuery.size.height-mediaQuery.padding.top-100, 2)),
-            )
-          ],
+        //MediaQuery in LayoutBuilder to avoid redrawing of parent when modal sheet is open
+        //and user taps on text input search bar, as the keyboard pops up and changes dimensions
+        //causing the redraw.
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            MediaQueryData mediaQueryData = MediaQuery.of(context);
+            return Stack(
+              children: [
+                Container(color: previousColor),
+                CircularRevealAnimation(
+                  child: SizedBox.expand(child: Container(color: revealColor)),
+                  //TODO: Do this better. Currently really rough calculations based on padding/img values
+                  centerOffset: Offset(50, mediaQueryData.padding.top + 100),
+                  animation: animation,
+                  minRadius: 100,
+                  maxRadius: sqrt( pow(mediaQueryData.size.width - 50, 2)+ pow(mediaQueryData.size.height  - 100, 2)),
+                )
+              ],
+            );
+          },
         );
-
       }
     );
   }
