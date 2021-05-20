@@ -29,6 +29,7 @@ class NowPlayingCard extends StatelessWidget {
                 builder: (BuildContext context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                     BlocProvider.of<ColorRevealBloc>(context).add(UpdateRevealColor(color: snapshot.data.dominantColor.color));
+                    Color contrastColor = snapshot.data.dominantColor.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
                     return Container(
                       color: Colors.transparent,
                       child: Row(
@@ -42,20 +43,20 @@ class NowPlayingCard extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      Icon(Icons.music_note),
-                                      Text(songInfo.title),
+                                      Icon(Icons.music_note, color: contrastColor),
+                                      Text(songInfo.title, style: TextStyle(color: contrastColor)),
                                     ],
                                   ),
                                   Row(
                                     children: [
-                                      Icon(Icons.person),
-                                      Text(songInfo.artist),
+                                      Icon(Icons.person, color: contrastColor),
+                                      Text(songInfo.artist, style: TextStyle(color: contrastColor)),
                                     ],
                                   ),
                                   Row(
                                     children: [
-                                      Icon(Icons.album),
-                                      Text(songInfo.album),
+                                      Icon(Icons.album, color: contrastColor),
+                                      Text(songInfo.album, style: TextStyle(color: contrastColor)),
                                     ],
                                   ),
                                 ]

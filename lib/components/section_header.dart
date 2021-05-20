@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class SectionHeader extends StatefulWidget {
   final String sectionTitle;
+  final Color contrastColor;
 
-  SectionHeader({Key key, this.sectionTitle}) : super(key: key);
+  SectionHeader({Key key, this.sectionTitle, this.contrastColor}) : super(key: key);
 
   @override
   _SectionHeaderState createState() => _SectionHeaderState();
@@ -20,7 +21,7 @@ class _SectionHeaderState extends State<SectionHeader> {
           children: [
             Text(
                 widget.sectionTitle,
-                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
+                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: widget.contrastColor)
             ),
             //Stylized divider
             Expanded(
@@ -29,7 +30,7 @@ class _SectionHeaderState extends State<SectionHeader> {
                 child:Container(
                   decoration: BoxDecoration(
                       border: Border.all(
-                        color:Colors.black,
+                        color: widget.contrastColor,
                         width: 2.5,
                       ),
                       borderRadius: BorderRadius.circular(10.0)

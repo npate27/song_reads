@@ -10,6 +10,7 @@ import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/components/now_playing_card.dart';
 import 'package:song_reads/components/search_result_expansion_panel_list.dart';
+import 'package:song_reads/components/song_reads_main_header.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
@@ -68,24 +69,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               child: Center(
                 child: Column(
                   children: [
-                    Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                              LiteralConstants.appName,
-                              style: TextStyle (fontSize: 30.0, fontWeight: FontWeight.bold)
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            icon: Icon(Icons.settings, size: 30,),
-                            onPressed: () { Navigator.pushNamed(context, RouterConstants.preferencesRoute); },
-                          ),
-                        ),
-                      ],
-                    ),
+                    SongReadsMainHeader(),
                     songBlocBuilder(),
                     songSearchBlocBuilder(),
                   ],
