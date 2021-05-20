@@ -66,7 +66,7 @@ class NowPlayingCard extends StatelessWidget {
                     );
                   }
                   //TODO: make this better
-                  return Center(child: Text("Getting song info...", style: TextStyle(fontSize: 20),));
+                  return Center(child: Text('Getting song info...', style: TextStyle(fontSize: 20),));
                 }
             ),
             Align(
