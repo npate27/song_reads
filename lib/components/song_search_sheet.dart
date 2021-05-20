@@ -11,12 +11,7 @@ import 'package:song_reads/utils/token_store.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 
 
-class SongSearchSheet extends StatefulWidget {
-  @override
-  _SongSearchSheetState createState() => _SongSearchSheetState();
-}
-
-class _SongSearchSheetState extends State<SongSearchSheet> {
+class SongSearchSheet extends StatelessWidget {
   final SearchBarController<SongInfo> _searchBarController = SearchBarController();
   @override
   Widget build(BuildContext context) {
