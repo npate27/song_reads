@@ -6,7 +6,7 @@ import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 import 'package:palette_generator/palette_generator.dart';
-
+import 'package:tinycolor/tinycolor.dart';
 
 class NowPlayingCard extends StatelessWidget {
   final SongInfo songInfo;
@@ -22,67 +22,72 @@ class NowPlayingCard extends StatelessWidget {
         borderOnForeground: false,
         color: Colors.transparent,
         elevation: 0,
-        child: Stack(
-          children: [
+        child:
             FutureBuilder(
                 future: PaletteGenerator.fromImageProvider(NetworkImage(songInfo.artworkImage)),
                 builder: (BuildContext context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                     BlocProvider.of<ColorRevealBloc>(context).add(UpdateRevealColor(colorPalettes: snapshot.data));
-                    Color contrastColor = snapshot.data.dominantColor.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-                    return Container(
-                      color: Colors.transparent,
-                      child: Row(
-                        children: [
-                          Image.network(songInfo.artworkImage, height: 100),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
+                    Color dominantColor = snapshot.data.dominantColor.color;
+                    Color contrastColor = dominantColor.luminance > 0.5 ? Colors.black : Colors.white;
+                    Color complementaryColor = dominantColor.compliment.isDark ? dominantColor.compliment.lighten() : dominantColor.compliment.darken();
+                    Color complementaryContrastColor = complementaryColor.luminance > 0.5 ? Colors.black : Colors.white;
+
+                    return Stack(
+                      children: [
+                        Container(
+                          color: Colors.transparent,
+                          child: Row(
+                            children: [
+                              Image.network(songInfo.artworkImage, height: 100),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Icon(Icons.music_note, color: contrastColor),
-                                      Text(songInfo.title, style: TextStyle(color: contrastColor)),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.person, color: contrastColor),
-                                      Text(songInfo.artist, style: TextStyle(color: contrastColor)),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.album, color: contrastColor),
-                                      Text(songInfo.album, style: TextStyle(color: contrastColor)),
-                                    ],
-                                  ),
-                                ]
-                            ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.music_note, color: contrastColor),
+                                          Text(songInfo.title, style: TextStyle(color: contrastColor)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.person, color: contrastColor),
+                                          Text(songInfo.artist, style: TextStyle(color: contrastColor)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.album, color: contrastColor),
+                                          Text(songInfo.album, style: TextStyle(color: contrastColor)),
+                                        ],
+                                      ),
+                                    ]
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            decoration: BoxDecoration(color: complementaryColor, borderRadius: BorderRadius.all(Radius.circular(50.0))),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                              child: Text(LiteralConstants.nowPlayingCardHeader, style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: complementaryContrastColor)),
+                            )
+                          ),
+                        ),
+                      ]
                     );
                   }
                   //TODO: make this better
                   return Center(child: Text('Getting song info...', style: TextStyle(fontSize: 20),));
                 }
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child:
-              Container(
-                  decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.all(Radius.circular(50.0))),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: Text(LiteralConstants.nowPlayingCardHeader, style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-                  )
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
