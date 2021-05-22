@@ -13,6 +13,7 @@ import 'package:song_reads/components/now_playing_card.dart';
 import 'package:song_reads/components/search_result_expansion_panel_list.dart';
 import 'package:song_reads/components/main_header.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
+import 'package:song_reads/components/song_search_sheet_fab.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
@@ -50,20 +51,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        foregroundColor: Colors.white,
-        onPressed: () async {
-          showModalBottomSheet(
-              isScrollControlled: false,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
-              backgroundColor: Colors.white,
-              context: context,
-              builder: (context) => SongSearchSheet()
-          );
-        },
-        child: Icon(Icons.search),
-        backgroundColor: Colors.red,
-      ),
+      floatingActionButton: SongSearchSheetFab(),
       body: Stack(
           children: [
             colorRevealBuilder(),
