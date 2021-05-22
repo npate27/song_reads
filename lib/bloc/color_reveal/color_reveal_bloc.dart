@@ -11,7 +11,7 @@ class ColorRevealBloc extends Bloc<ColorRevealEvent, ColorRevealState> {
   @override
   Stream<ColorRevealState> mapEventToState(ColorRevealEvent event) async* {
     if (event is UpdateRevealColor) {
-      yield ChangeColorRevealState(color: event.color);
+      yield ChangeColorRevealState(colorPalettes: event.colorPalettes);
     }
   }
 }

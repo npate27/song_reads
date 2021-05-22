@@ -5,6 +5,7 @@ import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
@@ -50,6 +51,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        foregroundColor: Colors.white,
         onPressed: () async {
           showModalBottomSheet(
               isScrollControlled: false,
@@ -94,7 +96,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         }
         if (state is ChangeColorRevealState){
           previousColor = revealColor;
-          revealColor = state.color;
+          revealColor = state.colorPalettes.dominantColor.color;
         }
         Future.delayed(const Duration(milliseconds: 100), () {
           animationController.forward();

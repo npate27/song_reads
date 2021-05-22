@@ -36,7 +36,7 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
         listener: (BuildContext context, ColorRevealState state) {
           if (state is ChangeColorRevealState) {
             setState(() {
-              contrastColor = state.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+              contrastColor = state.colorPalettes.dominantColor.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
             });
           }
         },

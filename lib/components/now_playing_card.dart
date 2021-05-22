@@ -28,7 +28,7 @@ class NowPlayingCard extends StatelessWidget {
                 future: PaletteGenerator.fromImageProvider(NetworkImage(songInfo.artworkImage)),
                 builder: (BuildContext context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-                    BlocProvider.of<ColorRevealBloc>(context).add(UpdateRevealColor(color: snapshot.data.dominantColor.color));
+                    BlocProvider.of<ColorRevealBloc>(context).add(UpdateRevealColor(colorPalettes: snapshot.data));
                     Color contrastColor = snapshot.data.dominantColor.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
                     return Container(
                       color: Colors.transparent,

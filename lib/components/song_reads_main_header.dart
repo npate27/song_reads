@@ -21,7 +21,7 @@ class _SongReadsMainHeaderState extends State<SongReadsMainHeader> {
         listener: (BuildContext context, ColorRevealState state) {
           if (state is ChangeColorRevealState) {
              setState(() {
-               contrastColor = state.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+               contrastColor = state.colorPalettes.dominantColor.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
              });
           }
         },
