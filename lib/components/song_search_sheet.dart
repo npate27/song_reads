@@ -1,5 +1,6 @@
 
 import 'package:flappy_search_bar/flappy_search_bar.dart';
+import 'package:flappy_search_bar/search_bar_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/bloc/blocs.dart';
@@ -33,9 +34,22 @@ class SongSearchSheet extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/logos/spotify-logo.png', height: 30),
-              SizedBox(width: 5),
-              Text("SEARCH ON SPOTIFY", style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: Color(0xFF1DB954)))
+              Container(
+                decoration: BoxDecoration(
+                    color:Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Row(
+                    children: [
+                      Image.asset('assets/images/logos/spotify-logo.png', height: 30),
+                      SizedBox(width: 5),
+                      Text("SEARCH ON SPOTIFY", style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: Color(0xFF1DB954)))
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -49,6 +63,7 @@ class SongSearchSheet extends StatelessWidget {
 SearchBar _searchBar(BuildContext context, SearchBarController searchBarController) {
   return SearchBar<SongInfo>(
     searchBarPadding: EdgeInsets.symmetric(horizontal: 10),
+    searchBarStyle: SearchBarStyle(backgroundColor: Colors.white),
     headerPadding: EdgeInsets.symmetric(horizontal: 10),
     listPadding: EdgeInsets.symmetric(horizontal: 10),
     onSearch: _getSpotifyResults,
