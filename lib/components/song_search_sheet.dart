@@ -68,12 +68,9 @@ SearchBar _searchBar(BuildContext context, SearchBarController searchBarControll
     listPadding: EdgeInsets.symmetric(horizontal: 10),
     onSearch: _getSpotifyResults,
     searchBarController: searchBarController,
-    placeHolder: Text("No results yet"),
+    hintText: 'Song, Artist, Album',
     cancellationWidget: Icon(Icons.cancel, size: 35,),
-    emptyWidget: Text("empty"),
-    onCancelled: () {
-      print("Cancelled triggered");
-    },
+    emptyWidget: Center(child: Text('No results found')),
     mainAxisSpacing: 10,
     crossAxisSpacing: 10,
     crossAxisCount: 1,
