@@ -16,7 +16,7 @@ class SongSearchSheetFab extends StatefulWidget {
 class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
   //TODO: make this default be better, depends on default background color, currently grey.
   Color dominantColor = Colors.white;
-  TinyColor contrastColor = Colors.black.toTinyColor();
+  Color complementaryColor = Colors.black;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
         if (state is ChangeColorRevealState) {
           setState(() {
             dominantColor = state.colorPalettes.dominantColor.color;
-            contrastColor = dominantColor.compliment.toTinyColor();
+            complementaryColor = dominantColor.compliment;
           });
         }
       },
@@ -34,13 +34,13 @@ class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
           showModalBottomSheet(
               isScrollControlled: false,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
-              backgroundColor: contrastColor.isDark() ? contrastColor.lighten().color : contrastColor.darken().color,
+              backgroundColor: complementaryColor.isDark ? complementaryColor.lighten() : complementaryColor.darken(),
               context: context,
               builder: (context) => SongSearchSheet()
           );
         },
         child: Icon(Icons.search, color: dominantColor),
-        backgroundColor: contrastColor.isDark() ? contrastColor.lighten().color : contrastColor.darken().color,
+        backgroundColor: complementaryColor.isDark ? complementaryColor.lighten() : complementaryColor.darken(),
       ),
     );
   }

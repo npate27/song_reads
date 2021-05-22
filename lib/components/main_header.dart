@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
+import 'package:tinycolor/tinycolor.dart';
 
 class SongReadsMainHeader extends StatefulWidget {
   const SongReadsMainHeader({Key key}) : super(key: key);
@@ -21,7 +22,7 @@ class _SongReadsMainHeaderState extends State<SongReadsMainHeader> {
         listener: (BuildContext context, ColorRevealState state) {
           if (state is ChangeColorRevealState) {
              setState(() {
-               contrastColor = state.colorPalettes.dominantColor.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+               contrastColor = state.colorPalettes.dominantColor.color.luminance > 0.5 ? Colors.black : Colors.white;
              });
           }
         },
