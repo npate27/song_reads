@@ -105,7 +105,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   centerOffset: Offset(50, mediaQueryData.padding.top + 100),
                   animation: animation,
                   minRadius: 100,
-                  maxRadius: sqrt( pow(mediaQueryData.size.width - 50, 2)+ pow(mediaQueryData.size.height  - 100, 2)) + 500,
+                  maxRadius: sqrt( pow(mediaQueryData.size.width - 50, 2)+ pow(mediaQueryData.size.height  - 100, 2) ) + 500,
                 )
               ],
             );
