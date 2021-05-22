@@ -11,7 +11,7 @@ import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/components/now_playing_card.dart';
 import 'package:song_reads/components/search_result_expansion_panel_list.dart';
-import 'package:song_reads/components/song_reads_main_header.dart';
+import 'package:song_reads/components/main_header.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
