@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
+import 'package:song_reads/components/song_search_sheet_background.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:tinycolor/tinycolor.dart';
@@ -33,10 +34,10 @@ class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
         onPressed: () async {
           showModalBottomSheet(
               isScrollControlled: false,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               backgroundColor: complementaryColor.isDark ? complementaryColor.lighten() : complementaryColor.darken(),
               context: context,
-              builder: (context) => SongSearchSheet()
+              builder: (context) => SongSearchSheetBackground()
           );
         },
         child: Icon(Icons.search, color: dominantColor),
