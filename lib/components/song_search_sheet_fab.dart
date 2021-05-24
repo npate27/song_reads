@@ -35,7 +35,7 @@ class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
           showModalBottomSheet(
               isScrollControlled: false,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              backgroundColor: complementaryColor.isDark ? complementaryColor.lighten() : complementaryColor.darken(),
+              backgroundColor: dominantColor,
               context: context,
               builder: (context) => SongSearchSheetBackground()
           );
