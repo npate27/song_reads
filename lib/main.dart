@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide Router;
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -78,6 +79,11 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox(TokenStore.tokenBoxKey);
   await Hive.openBox(PreferencesStore.preferencesBoxKey);
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.transparent,
+  ));
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
   runApp(SongReads());
   debugPaintSizeEnabled = false;
 }
