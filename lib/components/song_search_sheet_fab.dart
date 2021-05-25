@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/bloc/blocs.dart';
-import 'package:song_reads/components/song_search_sheet_background.dart';
+import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/utils/color_utils.dart';
@@ -34,7 +34,7 @@ class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               backgroundColor: dominantColor,
               context: context,
-              builder: (context) => SongSearchSheetBackground()
+              builder: (context) => SongSearchSheet()
           );
         },
         child: Icon(Icons.search, color: dominantColor),
