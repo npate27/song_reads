@@ -5,7 +5,7 @@ import 'package:song_reads/components/comment_source_result_card.dart';
 import 'package:song_reads/components/section_header.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
-import 'package:tinycolor/tinycolor.dart';
+import 'package:song_reads/utils/color_utils.dart';
 
 class SearchResultExpansionPanelList extends StatefulWidget {
   final List<Source> songResults, albumResults;
@@ -37,7 +37,7 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
         listener: (BuildContext context, ColorRevealState state) {
           if (state is ChangeColorRevealState) {
             setState(() {
-              contrastColor = state.colorPalettes.dominantColor.color.luminance > 0.5 ? Colors.black : Colors.white;
+              contrastColor = lightAdjustedComplimentColor(state.colorPalettes.dominantColor.color);
             });
           }
         },

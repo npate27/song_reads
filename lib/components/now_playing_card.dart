@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
-import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:tinycolor/tinycolor.dart';
+import 'package:song_reads/utils/color_utils.dart';
 
 class NowPlayingCard extends StatelessWidget {
   final SongInfo songInfo;
@@ -29,9 +28,8 @@ class NowPlayingCard extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                     BlocProvider.of<ColorRevealBloc>(context).add(UpdateRevealColor(colorPalettes: snapshot.data));
                     Color dominantColor = snapshot.data.dominantColor.color;
-                    Color contrastColor = dominantColor.luminance > 0.5 ? Colors.black : Colors.white;
-                    Color complementaryColor = dominantColor.compliment.isDark ? dominantColor.compliment.lighten() : dominantColor.compliment.darken();
-                    Color complementaryContrastColor = complementaryColor.luminance > 0.5 ? Colors.black : Colors.white;
+                    Color complementaryColor = lightAdjustedComplimentColor(dominantColor);
+                    Color complementaryContrastColor = absoluteContrastColorFromLuminance(complementaryColor);
 
                     return Stack(
                       children: [
@@ -48,20 +46,20 @@ class NowPlayingCard extends StatelessWidget {
                                     children: [
                                       Row(
                                         children: [
-                                          Icon(Icons.music_note, color: contrastColor),
-                                          Text(songInfo.title, style: TextStyle(color: contrastColor)),
+                                          Icon(Icons.music_note, color: complementaryColor),
+                                          Text(songInfo.title, style: TextStyle(color: complementaryColor)),
                                         ],
                                       ),
                                       Row(
                                         children: [
-                                          Icon(Icons.person, color: contrastColor),
-                                          Text(songInfo.artist, style: TextStyle(color: contrastColor)),
+                                          Icon(Icons.person, color: complementaryColor),
+                                          Text(songInfo.artist, style: TextStyle(color: complementaryColor)),
                                         ],
                                       ),
                                       Row(
                                         children: [
-                                          Icon(Icons.album, color: contrastColor),
-                                          Text(songInfo.album, style: TextStyle(color: contrastColor)),
+                                          Icon(Icons.album, color: complementaryColor),
+                                          Text(songInfo.album, style: TextStyle(color: complementaryColor)),
                                         ],
                                       ),
                                     ]

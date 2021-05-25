@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
-import 'package:tinycolor/tinycolor.dart';
+import 'package:song_reads/utils/color_utils.dart';
 
 class SongSearchSheetBackground extends StatefulWidget {
   const SongSearchSheetBackground({Key key}) : super(key: key);
@@ -56,7 +56,7 @@ class _SongSearchSheetBackgroundState extends State<SongSearchSheetBackground> w
               animationController.reset();
             }
             previousColor = revealColor;
-            revealColor = state.colorPalettes.dominantColor.color.compliment;
+            revealColor = lightAdjustedComplimentColor(state.colorPalettes.dominantColor.color);
           }
           Future.delayed(const Duration(milliseconds: 100), () {
             animationController.forward();
