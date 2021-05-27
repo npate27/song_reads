@@ -67,7 +67,7 @@ class _SongSearchSheetFabState extends State<SongSearchSheetFab> with SingleTick
                 );
               }
             ),
-            backgroundColor: lightAdjustedComplimentColor(dominantColor),
+            backgroundColor: absoluteContrastColorFromLuminance(dominantColor),
           ),
           SizedBox(height: 10),
           FloatingActionButton(
