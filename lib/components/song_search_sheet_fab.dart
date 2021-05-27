@@ -5,6 +5,9 @@ import 'package:song_reads/components/song_search_sheet.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/utils/color_utils.dart';
+import 'dart:math';
+
+import 'package:song_reads/utils/requery_current_song_timer.dart';
 
 class SongSearchSheetFab extends StatefulWidget {
   const SongSearchSheetFab({Key key}) : super(key: key);
@@ -13,9 +16,24 @@ class SongSearchSheetFab extends StatefulWidget {
   _SongSearchSheetFabState createState() => _SongSearchSheetFabState();
 }
 
-class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
+class _SongSearchSheetFabState extends State<SongSearchSheetFab> with SingleTickerProviderStateMixin{
   //TODO: make this default be better, depends on default background color, currently grey.
   Color dominantColor = Colors.white;
+  AnimationController animationController;
+  Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeIn,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +45,45 @@ class _SongSearchSheetFabState extends State<SongSearchSheetFab> {
           });
         }
       },
-      child: FloatingActionButton(
-        onPressed: () async {
-          showModalBottomSheet(
-              isScrollControlled: false,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              backgroundColor: dominantColor,
-              context: context,
-              builder: (context) => SongSearchSheet()
-          );
-        },
-        child: Icon(Icons.search, color: dominantColor),
-        backgroundColor: lightAdjustedComplimentColor(dominantColor),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              animationController.repeat();
+              ReQueryCurrentSongTimer().cancel();
+              BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
+              BlocProvider.of<SongBloc>(context).listen((state) {
+                animationController.reset();
+              });
+            },
+            child: AnimatedBuilder(
+              animation: animation,
+              child: Icon(Icons.refresh, color: dominantColor),
+              builder: (BuildContext context, Widget child) {
+                return Transform.rotate(
+                  child: child,
+                  angle: animation.value * 2.0 * pi,
+                );
+              }
+            ),
+            backgroundColor: lightAdjustedComplimentColor(dominantColor),
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: () async {
+              showModalBottomSheet(
+                  isScrollControlled: false,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  backgroundColor: dominantColor,
+                  context: context,
+                  builder: (context) => SongSearchSheet()
+              );
+            },
+            child: Icon(Icons.search, color: dominantColor),
+            backgroundColor: lightAdjustedComplimentColor(dominantColor),
+          ),
+        ],
       ),
     );
   }
