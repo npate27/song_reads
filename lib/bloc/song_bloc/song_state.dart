@@ -28,5 +28,5 @@ class SongLoaded extends SongState {
   const SongLoaded({this.songInfo, this.delayNextQueryMs});
 
   @override
-  List<Object> get props => [songInfo];
+  List<Object> get props => [songInfo, delayNextQueryMs];
 }
