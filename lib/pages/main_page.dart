@@ -17,6 +17,7 @@ import 'package:song_reads/components/song_search_sheet_fab.dart';
 import 'package:song_reads/constants/routes.dart' as RouterConstants;
 import 'package:song_reads/constants/literals.dart' as LiteralConstants;
 import 'package:song_reads/models/models.dart';
+import 'package:song_reads/utils/requery_current_song_timer.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -117,8 +118,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   //Update NowPlayingCard when new song is selected in modal or currently playing song if any on spotify if user is logged in
   BlocBuilder<SongBloc, SongState> songBlocBuilder() {
-    //Empty timer init since it cant be null
-    Timer delayNextQueryTimer = Timer(Duration(seconds: 0), () => {});
+    ReQueryCurrentSongTimer reQueryCurrentSongTimer = ReQueryCurrentSongTimer();
     SongInfo curSongInfo;
     return BlocBuilder<SongBloc, SongState>(
         builder: (context, state) {
@@ -135,15 +135,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             int delayNextQueryMs = state.delayNextQueryMs;
             //Cancel timer since we revert to manual selection
             if(delayNextQueryMs == null) {
-              delayNextQueryTimer.cancel();
+              reQueryCurrentSongTimer.cancel();
             }
             //Wait for song to end to requery if needed
             //extra padding for delays in network request in case song result came up the same still
             else {
-              delayNextQueryTimer = Timer(Duration(milliseconds: delayNextQueryMs + 1500), () {
-                //TODO handle ads
-                BlocProvider.of<SongBloc>(context).add(FindCurrentlyPlayingSpotifySong());
-              });
+              reQueryCurrentSongTimer.updateTimerDuration(delayNextQueryMs + 1500, context);
             }
 
             //Only requery sources if song changes
