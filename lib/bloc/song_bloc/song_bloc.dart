@@ -25,7 +25,8 @@ class SongBloc extends Bloc<SongEvent, SongState> {
       else {
         if(currentSongResults.isEmpty) {
           //Could be an advert or spotify is not open, wait before requerying
-          await Future.delayed(Duration(milliseconds: 5000));
+          //wait the standard 30 seconds if ad, otherwise user can refresh manually
+          await Future.delayed(Duration(seconds: 30));
           yield SongDiscovery(isLoggedIn: true);
         } else {
           //Parse song and indicate time till next song takes over
