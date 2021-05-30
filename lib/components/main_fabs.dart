@@ -9,14 +9,14 @@ import 'dart:math';
 
 import 'package:song_reads/utils/requery_current_song_timer.dart';
 
-class SongSearchSheetFab extends StatefulWidget {
-  const SongSearchSheetFab({Key key}) : super(key: key);
+class MainFabs extends StatefulWidget {
+  const MainFabs({Key key}) : super(key: key);
 
   @override
-  _SongSearchSheetFabState createState() => _SongSearchSheetFabState();
+  _MainFabsState createState() => _MainFabsState();
 }
 
-class _SongSearchSheetFabState extends State<SongSearchSheetFab> with SingleTickerProviderStateMixin{
+class _MainFabsState extends State<MainFabs> with SingleTickerProviderStateMixin{
   //TODO: make this default be better, depends on default background color, currently grey.
   Color dominantColor = Colors.white;
   AnimationController animationController;
