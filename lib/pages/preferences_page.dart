@@ -161,7 +161,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     else {
       return SettingsTile(
         title: 'Log in to Spotify',
-        subtitle: 'Lets the SongReads use your currently playing song to find comments',
+        subtitle: 'Let SongReads use your currently playing song to find comments',
         leading: Icon(Icons.login),
         onPressed: (BuildContext context) async {
           //TODO: process if cancelled/failed
