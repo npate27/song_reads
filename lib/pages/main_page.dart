@@ -10,6 +10,7 @@ import 'package:song_reads/bloc/blocs.dart';
 import 'package:song_reads/bloc/color_reveal/color_reveal_bloc.dart';
 import 'package:song_reads/components/custom_loading_indicator.dart';
 import 'package:song_reads/components/now_playing_card.dart';
+import 'package:song_reads/components/now_playing_sliver_persistent_header.dart';
 import 'package:song_reads/components/search_result_expansion_panel_list.dart';
 import 'package:song_reads/components/main_header.dart';
 import 'package:song_reads/components/song_search_sheet.dart';
@@ -61,8 +62,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 child: Column(
                   children: [
                     SongReadsMainHeader(),
-                    songBlocBuilder(),
-                    songSearchBlocBuilder(),
+                    Flexible(
+                      child: CustomScrollView(
+                        shrinkWrap: true,
+                        slivers: [
+                          NowPlayingSliverPersistentHeader(child: songBlocBuilder()),
+                          SliverToBoxAdapter(child: songSearchBlocBuilder())
+                          ],
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -186,11 +194,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             List<Source> songResults = state.songResults;
             List<Source> albumResults = state.albumResults;
 
-            return Expanded(
-              child: SingleChildScrollView(
-                child: SearchResultExpansionPanelList(songResults: songResults, albumResults: albumResults),
-              ),
-            );
+            return SearchResultExpansionPanelList(songResults: songResults, albumResults: albumResults);
           }
           return Center(
               child: Text("No results yet")

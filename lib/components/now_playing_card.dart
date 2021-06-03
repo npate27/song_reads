@@ -15,8 +15,7 @@ class NowPlayingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(10,10,10,0),
-      height: 100,
+      height: 150,
       child: Card(
         borderOnForeground: false,
         color: Colors.transparent,
@@ -34,10 +33,10 @@ class NowPlayingCard extends StatelessWidget {
                     return Stack(
                       children: [
                         Container(
-                          color: Colors.transparent,
+                          color: dominantColor,
                           child: Row(
                             children: [
-                              Image.network(songInfo.artworkImage, height: 100),
+                              Image.network(songInfo.artworkImage, height: 150, width: 150),
                               Padding(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: Column(
