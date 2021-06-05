@@ -18,6 +18,7 @@ class NowPlayingCard extends StatelessWidget {
       height: 150,
       child: Card(
         borderOnForeground: false,
+        margin: EdgeInsets.all(0.0),
         color: Colors.transparent,
         elevation: 0,
         child:
