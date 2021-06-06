@@ -37,33 +37,35 @@ class NowPlayingCard extends StatelessWidget {
                           color: dominantColor,
                           child: Row(
                             children: [
-                              Image.network(songInfo.artworkImage, height: 150, width: 150),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(Icons.music_note, color: complementaryColor),
-                                          Text(songInfo.title, style: TextStyle(color: complementaryColor)),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.person, color: complementaryColor),
-                                          Text(songInfo.artist, style: TextStyle(color: complementaryColor)),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.album, color: complementaryColor),
-                                          Text(songInfo.album, style: TextStyle(color: complementaryColor)),
-                                        ],
-                                      ),
-                                    ]
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                //150x150 is the default (I think?) need a way to enforce via url
+                                // TODO check API for acceptable sizes
+                                child: Image.network(songInfo.artworkImage),
+                              ),
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(Icons.music_note, color: complementaryColor),
+                                        Text(songInfo.title, style: TextStyle(color: complementaryColor)),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.person, color: complementaryColor),
+                                        Text(songInfo.artist, style: TextStyle(color: complementaryColor)),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.album, color: complementaryColor),
+                                        Text(songInfo.album, style: TextStyle(color: complementaryColor)),
+                                      ],
+                                    ),
+                                  ]
                               ),
                             ],
                           ),
