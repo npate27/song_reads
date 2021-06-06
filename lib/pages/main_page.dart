@@ -63,14 +63,20 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   children: [
                     SongReadsMainHeader(),
                     Flexible(
-                      child: CustomScrollView(
-                        //Prevents NowPlayingSliverPersistentHeader from scrolling upwards on downscroll
-                        physics: ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        slivers: [
-                          NowPlayingSliverPersistentHeader(child: songBlocBuilder()),
-                          SliverToBoxAdapter(child: songSearchBlocBuilder())
+                      child: NotificationListener<OverscrollIndicatorNotification>(
+                        onNotification: (overscroll) {
+                          overscroll.disallowGlow();
+                          return true;
+                        },
+                        child:  CustomScrollView(
+                          //Prevents NowPlayingSliverPersistentHeader from scrolling upwards on downscroll
+                          physics: ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          slivers: [
+                            NowPlayingSliverPersistentHeader(child: songBlocBuilder()),
+                            SliverToBoxAdapter(child: songSearchBlocBuilder())
                           ],
+                        ),
                       ),
                     )
                   ],
