@@ -18,18 +18,6 @@ class SearchResultExpansionPanelList extends StatefulWidget {
 class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPanelList> {
   //TODO: make this default be better, depends on default background color, currently grey.
   Color contrastColor = Colors.black;
-  List<bool> _isOpen = [false, false]; //[song, album]
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _isOpen[0] = widget.songResults.isNotEmpty;
-        _isOpen[1] = widget.albumResults.isNotEmpty;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,34 +29,38 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
             });
           }
         },
-        child: ExpansionPanelList(
-          expandedHeaderPadding: EdgeInsets.zero,
-          dividerColor: Colors.transparent,
-          elevation: 0,
-          children: [
-            resultExpansionPanel(LiteralConstants.songCommentHeader, widget.songResults, 0),
-            resultExpansionPanel(LiteralConstants.albumCommentHeader, widget.albumResults, 1)
-          ],
-          expansionCallback: (i, isOpen) =>
-            setState(() =>
-              _isOpen[i] = !isOpen,
-            )
+        child: Theme(
+          // Theme to remove divider line on exapnded tiles
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent, accentColor: contrastColor, unselectedWidgetColor: contrastColor),
+          child: Column(
+            children: [
+              resultExpansionTile(LiteralConstants.songCommentHeader, widget.songResults, Icons.music_note),
+              resultExpansionTile(LiteralConstants.albumCommentHeader, widget.albumResults, Icons.album)
+            ],
+          ),
         )
     );
-
-
   }
 
-  ExpansionPanel resultExpansionPanel(String headerTitle, List<Source> results, int isExpandedIndex) {
-    //TODO: Replicate ExpansionPanelClass so that trailing icon color can also change
-    return ExpansionPanel(
-        canTapOnHeader: true,
+  ExpansionTile resultExpansionTile(String headerTitle, List<Source> results, IconData iconData) {
+    return ExpansionTile(
+        title: Row(
+          children: [
+            Icon(iconData, size: 30, color: contrastColor),
+            SizedBox(width: 10),
+            Text(
+              headerTitle,
+              style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: contrastColor
+              ),
+            ),
+          ],
+        ),
         backgroundColor: Colors.transparent,
-        isExpanded: _isOpen[isExpandedIndex],
-        headerBuilder: (BuildContext context, bool isExpanded) {
-          return SectionHeader(sectionTitle: headerTitle, contrastColor: contrastColor);
-        },
-        body: ListView.builder(
+        children: [
+          ListView.builder(
             padding: EdgeInsets.only(bottom: 10.0), // Prevent clipped card shadow at bottom of list
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
@@ -81,6 +73,7 @@ class _SearchResultExpansionPanelListState extends State<SearchResultExpansionPa
               return CommentSourceResultCardItem(sourceData: GeniusSong(
                   id: "test", title: "test", likes: 42069, numComments: 69));
             })
+        ]
     );
   }
 }
